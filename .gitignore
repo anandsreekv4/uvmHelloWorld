@@ -1,0 +1,9 @@
+*_lib
+modelsim.ini
+*_setup
+transcript
+certe_*
+*_compile
+elab
+work
+
