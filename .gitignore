@@ -1,4 +1,5 @@
 *_lib
+*_work
 modelsim.ini
 *_setup
 transcript
@@ -6,4 +7,4 @@ certe_*
 *_compile
 elab
 work
-
+.*.sw*

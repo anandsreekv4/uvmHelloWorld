@@ -1,2 +1,2 @@
-design/register/tb/tx_pkg.svh
-design/register/tb/top.sv
+tb/tx_pkg.svh
+tb/top.sv

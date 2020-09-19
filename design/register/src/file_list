@@ -1,2 +1,2 @@
-+incdir+register/src
-design/register/src/register.sv
++incdir+src
+src/register.sv

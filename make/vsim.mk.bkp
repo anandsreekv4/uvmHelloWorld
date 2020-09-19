@@ -1,0 +1,39 @@
+export MODELVER=questasim_10.5c_5
+
+WORKLIBS     = $(REFLIBS:%=%_lib)
+COMP_TARGETS = $(REFLIBS:%=$(WORKLIB)/%_compile)
+
+LSF = bsub -Ip
+VLIB= vlib
+VMAP= vmap
+VLOG= $(LSF) vlog
+VSIM= $(LSF) vsim -novopt
+
+VOPTFLAGS = +acc
+VOPT = $(LSF) vopt $(VOPTFLAGS)
+
+%_lib:
+	$(VLIB) $(@)
+	$(VMAP) $(@) $(@)
+
+%_lib/_lib.ts: | %_lib
+	touch $@
+
+setup: $(REFLIBS:%=%_lib/_lib.ts)
+	touch $@
+
+%_lib/_compile.ts: setup
+	$(VLOG) -work $(@D) $(WORKLIBS:%= -L %) -f $(@D:%_lib=%)/file_list
+	touch $@
+
+compile:$(REFLIBS:%=%_lib/_compile.ts)
+	touch $@
+
+%_lib/_elab.ts: compile
+	touch $@
+
+elab: $(REFLIBS:%=%_lib/_elab.ts)
+	touch $@
+
+sim: elab
+	$(VSIM) $(WORKLIBS:%= -L %) $(SIMOPTS) tb_lib.top
