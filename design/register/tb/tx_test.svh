@@ -45,9 +45,11 @@ class tx_test extends uvm_test;
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
-    // Here I will be sending my seq which utilises the seq item
-    // and send it to the seqr.
-    // So, first thing is the creation of a seq handle and object.
+    /*---------------------------------------------------------
+    Here I will be sending my seq which utilises the seq item
+    and send it to the seqr.
+    So, first thing is the creation of a seq handle and object.
+    ---------------------------------------------------------*/
       tx_seq#() seq;
       seq = tx_seq::type_id::create("seq",this);
 

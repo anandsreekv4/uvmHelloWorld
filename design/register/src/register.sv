@@ -24,6 +24,7 @@ input		   reset_n;
 input		   enable;
 input  [WIDTH-1:0] data;
 output [WIDTH-1:0] outa;
+   
 
 /*AUTOREG*/
 // Beginning of automatic regs (for this module's undeclared outputs)
@@ -41,8 +42,6 @@ always_ff @(posedge clk or negedge reset_n) begin: flop
 	// End of automatics
     end else if (enable) begin
 	outa <= data;
-    end else begin
-	outa <= outa;
     end
 end
 

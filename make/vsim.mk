@@ -30,7 +30,7 @@ WORKSFX = _work
 .PHONY: setup
 setup: $(REFLIBS:%=%$(WORKSFX)/$(WORKSFX).ts)
 
-%$(WORKSFX)/_compile.ts: $(REFLIBS:%=%$(WORKSFX)/$(WORKSFX).ts)
+%$(WORKSFX)/_compile.ts: $(REFLIBS:%=%$(WORKSFX)/$(WORKSFX).ts) %
 	$(VLOG) -work $(@D) $(WORKLIBS:%= -L %) -f $(@D:%$(WORKSFX)=%)/file_list
 	touch $@
 

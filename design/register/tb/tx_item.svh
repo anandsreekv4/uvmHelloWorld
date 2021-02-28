@@ -29,12 +29,12 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
   `uvm_object_utils(tx_item#())
 
   // -- Properties -- better to declare them rand  for control
-  rand byte unsigned           str_byte[]; // a dynamic array
-  rand bit unsigned  [WIDTH:0] data;
-  rand bit		       enable;     // handshake sig. - no rand.
-  bit		               reset_n;
-  string	               str;
-  bit unsigned       [WIDTH:0] outa;       // DUT Output - no rand.
+  rand byte unsigned             str_byte[]; // a dynamic array
+  rand bit unsigned  [WIDTH-1:0] data;
+  rand bit		         enable;     // handshake sig. - no rand.
+  bit		                 reset_n;
+  string	                 str;
+  bit unsigned       [WIDTH-1:0] outa;     // DUT Output - no rand.
 
   // -- constraints on properties --
   constraint str_c { // len of str should be 4
@@ -58,8 +58,8 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
   }
 
   constraint enable_c {
-      // enable should always be 1 while randomising 
-      /* enable == 1; */ 
+      // enable should always be 1 while randomising (by default)
+      enable == 1; 
   }
 
   // -- Methods --
@@ -138,6 +138,7 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
     $sformat(s, "%s\n ----- tx_item values ----- ",s);
     $sformat(s, "%s\n Data     : 0x%0h", s,this.data);
     $sformat(s, "%s\n enable   : 0x%0h", s,this.enable);
+    $sformat(s, "%s\n outa     : 0x%0h", s,this.outa);
     $sformat(s, "%s\n str_byte : %0h", s,this.str_byte);
     $sformat(s, "%s\n -------------------------- ",s);
     $sformat(s, "%s\n %s",s,this.sprint(uvm_default_table_printer));
@@ -163,6 +164,7 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
         printer.print_int("reset_n",reset_n,.size(1));
         printer.print_int("enable",enable,.size(1));
         printer.print_int("data",data,.size(WIDTH));
+        printer.print_int("outa",outa,.size(WIDTH));
         printer.print_string("str",str);
         /* printer.print_int("str_byte",str_byte,.size(str_byte.size())); */
     endfunction: do_print

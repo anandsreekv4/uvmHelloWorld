@@ -1,4 +1,4 @@
-/* tx_driver:
+/* tx_driver: 
  * Need to specialise this class for tx_item 
  * because it is specifically designed to drive
  * only a single type of item 
@@ -18,18 +18,15 @@ class tx_driver extends uvm_driver #(tx_item);
 
   function void build_phase (uvm_phase phase);
     super.build_phase(phase);
-    if (!
-        uvm_config_db #(virtual reg_if)::get(
-            this,
-            "*",
-            "reg_if",
-            regif_vi
-            /* .scope("ifs"), // Would need to add scopes in config_db? */
-            /* .name ("reg_if"), */
-            /* .val  (regif_vi) */
-        )
-    ) begin
-        `uvm_fatal (get_type_name (), "Didn't get handle to reg_if");
+    if (!  uvm_config_db 
+        #(virtual reg_if)
+        ::get(
+            .cntxt      ( this     ) ,
+            .inst_name  ( "*"      ) ,
+            .field_name ( "reg_if" ) ,
+            .value      ( regif_vi )
+        )) begin: get_vif
+        `uvm_fatal (get_type_name(), "Didn't get handle to reg_if");
     end
   endfunction: build_phase
 
@@ -101,7 +98,7 @@ class tx_driver extends uvm_driver #(tx_item);
     phase.raise_objection(this,"[reset_phase] Raising objection");
 
     regif_vi.reset_n = 1'b0;    // asserting reset 
-    repeat (2) @(regif_vi.tx_cb);
+    repeat (2) @(regif_vi.tx_master_cb);
     regif_vi.reset_n = 1'b1;    // de-asserting reset 
 
     phase.drop_objection(this,"[reset_phase] Dropping objection");
