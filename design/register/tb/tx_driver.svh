@@ -75,11 +75,11 @@ class tx_driver extends uvm_driver #(tx_item);
         tx.str_byte,
         tx.str
       ),
-      UVM_MEDIUM
+      UVM_DEBUG
     )
 
     `uvm_info (
-        "DRV_SHW_ITEM2",
+        get_type_name(),
         tx.convert2string(),
         UVM_MEDIUM
     )

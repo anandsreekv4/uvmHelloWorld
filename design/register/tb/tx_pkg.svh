@@ -15,6 +15,7 @@ package tx_pkg;
   typedef class tx_item;
   typedef class tx_driver;
   typedef class tx_monitor;
+  typedef class tx_fc_cov;
 
   `include "tx_test.svh"
   `include "tx_config.svh"
@@ -26,5 +27,6 @@ package tx_pkg;
   `include "tx_item.svh"
   `include "tx_driver.svh"
   `include "tx_monitor.svh"
+  `include "tx_fc_cov.svh"
 
 endpackage: tx_pkg

@@ -7,7 +7,9 @@ REFLIBS = \
 	  tb
 
 SIMOPTS = -do sim.do
-SIMOPTS+= -c
+ifndef GUI
+    SIMOPTS+= -c
+endif
 SIMOPTS+= +UVM_TESTNAME=$(UVM_TESTNAME) $(UVM_FLAGS)
 SIMOPTS+= +UVM_VERBOSITY=$(UVM_VERBOSITY)
 SIMOPTS+= -wlf trace.wlf
