@@ -2,6 +2,7 @@
 // It should always be outside the pkg. pkg is mostly for class.
 package tx_pkg;
   import uvm_pkg::*;        /* DO NOT DELETE */
+  export uvm_pkg::*;        /* Package chaining - DID NOT WORK!*/
   `include "uvm_macros.svh" /* DO NOT DELETE */
 
   typedef class tx_test;

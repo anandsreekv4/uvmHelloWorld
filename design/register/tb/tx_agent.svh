@@ -17,7 +17,7 @@ class tx_agent extends uvm_agent; // Notice no specialisation
   tx_driver drv; // "has-a" relationship with driver, monitor, sequencer
   tx_monitor mon; // Will use it once we have a DUT.
   uvm_sequencer #(tx_item#()) sqr; // sqr is never extended
-  // uvm_analysis_port#(tx_item) itxap; // Instantiating the analysis port!
+  uvm_analysis_port #(tx_item#()) pass_through_txap; // Instantiating the analysis port!
 
   // -- methods --
 
@@ -31,6 +31,7 @@ class tx_agent extends uvm_agent; // Notice no specialisation
     sqr = new(.name("sqr"),.parent(this)); // As is the folklore, no factory for sqr
     drv = tx_driver::type_id::create("drv",this);
     mon = tx_monitor::type_id::create("mon",this);
+    pass_through_txap = new(.name("pass_through_txap"), .parent(this)); // no need for factory ovrd
   endfunction : build_phase
 
 
@@ -43,7 +44,7 @@ class tx_agent extends uvm_agent; // Notice no specialisation
   virtual function void connect_phase( uvm_phase phase);
     super.connect_phase(phase);
     drv.seq_item_port.connect(sqr.seq_item_export);
-    /* mon.itxap.connect(itxap); */
+    mon.itx_ap.connect(pass_through_txap);
   endfunction: connect_phase
 
 endclass:tx_agent

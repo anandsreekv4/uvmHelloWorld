@@ -30,15 +30,15 @@ interface reg_if #(parameter WIDTH = 8) (input logic clk);
   // -- methods --
   //
   task automatic transfer (input tx_item tx);
-    @(posedge clk);
-    enable <= tx.enable;
-    data   <= tx.data; // Done driving
+    @(tx_master_cb);
+    tx_master_cb.enable <= tx.enable;
+    tx_master_cb.data   <= tx.data; // Done driving
   endtask: transfer
 
   task automatic tap (input tx_item tx);
-    tx.enable = enable;
-    tx.data   = data;
-    tx.outa   = outa;
+    tx.enable = tx_master_cb.enable;
+    tx.data   = tx_master_cb.data;
+    tx.outa   = tx_master_cb.outa;
   endtask: tap
 
   //

@@ -19,21 +19,21 @@ module top;
     /* DUT */
     parameter WIDTH = 8;
     register  #(
-        .WIDTH(8)
+        .WIDTH(WIDTH)
     ) ireg (
         /*AUTOINST*/
             // Outputs
-            .outa                       (ireg_if.outa[WIDTH-1:0]),
+            .outa                       (ireg_if.dut.outa[WIDTH-1:0]),
             // Inputs
             .clk                        (ireg_if.clk),
-            .reset_n                    (ireg_if.reset_n),
-            .enable                     (ireg_if.enable),
-            .data                       (ireg_if.data[WIDTH-1:0])
+            .reset_n                    (ireg_if.dut.reset_n),
+            .enable                     (ireg_if.dut.enable),
+            .data                       (ireg_if.dut.data[WIDTH-1:0])
     );
 
     /* CLOCK GEN */
     initial begin
-        clk = 0;
+        clk <= 0;
         forever #5 clk = !clk;
     end
      
@@ -48,13 +48,15 @@ module top;
             null,
             "uvm_test_top.*",
             "reg_if",
-            ireg_if
-
-            /* .scope("ifs"), */
-            /* .name ("reg_if"), */
-            /* .val  (ireg_if) */
+            ireg_if.tb
         );
     end
+
+    /* DUMP VCD */
+    initial begin: dump_vcd
+        $dumpfile("dump.vcd");
+        $dumpvars;
+    end: dump_vcd
    
 endmodule : top 
 

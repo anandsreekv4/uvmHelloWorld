@@ -10,6 +10,9 @@ SIMOPTS = -do sim.do
 SIMOPTS+= -c
 SIMOPTS+= +UVM_TESTNAME=$(UVM_TESTNAME) $(UVM_FLAGS)
 SIMOPTS+= +UVM_VERBOSITY=$(UVM_VERBOSITY)
+SIMOPTS+= -wlf trace.wlf
+SIMOPTS+= -uvmcontrol=all -classdebug -msgmode both
+SIMOPTS+= -coverage
 ifeq ($(DEBUG),1)
     SIMOPTS+= +UVM_CONFIG_DB_TRACE
     UVM_VERBOSITY=UVM_DEBUG

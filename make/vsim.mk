@@ -7,9 +7,11 @@ LSF = bsub -Ip
 VLIB= vlib
 VMAP= vmap
 VLOG= $(LSF) vlog
-VSIM= $(LSF) vsim -novopt
-VOPTFLAGS = +acc
+# VSIM= $(LSF) vsim -novopt
+VSIM= $(LSF) vsim
+VOPTFLAGS = +acc -assertdebug -fsmdebug -work tb$(WORKSFX) +cover=bcesfx
 VOPT = $(LSF) vopt $(VOPTFLAGS)
+IMAGE = opt
 
 WORKSFX = _work
 
@@ -38,14 +40,17 @@ setup: $(REFLIBS:%=%$(WORKSFX)/$(WORKSFX).ts)
 compile:$(REFLIBS:%=%$(WORKSFX)/_compile.ts)
 
 %$(WORKSFX)/_elab.ts: $(REFLIBS:%=%$(WORKSFX)/_compile.ts)
+	$(VOPT) $(WORKLIBS:%= -L %) tb$(WORKSFX).top -o $(IMAGE)
 	touch $@
 
 .PHONY: elab
 elab: $(REFLIBS:%=%$(WORKSFX)/_elab.ts)
 
 .PHONY: sim
-sim: $(REFLIBS:%=%$(WORKSFX)/_elab.ts)
-	$(VSIM) $(WORKLIBS:%= -L %) $(SIMOPTS) tb$(WORKSFX).top
+# sim: $(REFLIBS:%=%$(WORKSFX)/_elab.ts)
+sim: elab
+	# $(VSIM) $(WORKLIBS:%= -L %) $(SIMOPTS) tb$(WORKSFX).top
+	$(VSIM) $(WORKLIBS:%= -L %) $(SIMOPTS) -work tb$(WORKSFX) $(IMAGE)
 
 # Only for quick compile without library setup
 .PHONY: simclean
