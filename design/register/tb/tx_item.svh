@@ -57,10 +57,10 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
     foreach(str_byte[i]) str_byte[i] inside {[65:90]};
   }
 
-  constraint enable_c {
-      // enable should always be 1 while randomising (by default)
-      enable == 1; 
-  }
+  // constraint enable_c {
+  //     // enable should always be 1 while randomising (by default)
+  //     enable == 1; 
+  // }
 
   constraint reset_c {
       reset_n == 1;

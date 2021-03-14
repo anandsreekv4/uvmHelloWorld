@@ -6,6 +6,7 @@ package tx_pkg;
   `include "uvm_macros.svh" /* DO NOT DELETE */
 
   typedef class tx_test;
+  typedef class tx_rand_en_test;
   typedef class tx_config;
   typedef class tx_env_config;
   typedef class tx_env;
@@ -13,6 +14,7 @@ package tx_pkg;
   typedef class tx_agent;
   typedef class tx_base_seq;
   typedef class tx_seq;
+  typedef class tx_rand_en_seq;
   typedef class tx_item;
   typedef class tx_driver;
   typedef class tx_monitor;
@@ -20,6 +22,7 @@ package tx_pkg;
   typedef class tx_scb;
 
   `include "tx_test.svh"
+  `include "tx_rand_en_test.svh"
   `include "tx_config.svh"
   `include "tx_env_config.svh"
   `include "tx_env.svh"
@@ -27,6 +30,7 @@ package tx_pkg;
   `include "tx_agent.svh"
   `include "tx_base_seq.svh"
   `include "tx_seq.svh"
+  `include "tx_rand_en_seq.svh"
   `include "tx_item.svh"
   `include "tx_driver.svh"
   `include "tx_monitor.svh"
