@@ -7,51 +7,61 @@
 /////////////////////////////////////////////////////////////////////////
 
 interface reg_if #(parameter WIDTH = 8) (input logic clk);
-  import tx_pkg::*; // This is required since there are references
-                    // to classes defined in this pkg.
-  // data
-  logic [WIDTH-1:0] outa;
-  logic [WIDTH-1:0] data;
+    import tx_pkg::*; // This is required since there are references
+    // to classes defined in this pkg.
+    // data
+    logic [WIDTH-1:0] outa;
+    logic [WIDTH-1:0] data;
 
-  // control
-  logic       enable;
-  logic       reset_n;
+    // control
+    logic       enable;
+    logic       reset_n;
 
-  //
-  // clocking
-  //
-  clocking tx_master_cb @(posedge clk);
-    default input #1ns output #1ns;
-    output data,reset_n,enable;
-    input outa;
-  endclocking: tx_master_cb
+    //
+    // clocking
+    //
+    clocking tx_master_cb @(posedge clk);
+        default input #1step output #1ns;
+        output data,reset_n,enable;
+        input outa;
+    endclocking: tx_master_cb
 
-  // 
-  // -- methods --
-  //
-  task automatic transfer (input tx_item tx);
-    @(tx_master_cb);
-    tx_master_cb.enable <= tx.enable;
-    tx_master_cb.data   <= tx.data; // Done driving
-  endtask: transfer
+    clocking tx_slave_cb @(posedge clk);
+        default input #1step output #1ns;
+        input data,reset_n,enable;
+        output outa;
+    endclocking: tx_slave_cb
 
-  task automatic tap (input tx_item tx);
-    tx.enable = tx_master_cb.enable;
-    tx.data   = tx_master_cb.data;
-    tx.outa   = tx_master_cb.outa;
-  endtask: tap
+    // 
+    // -- methods --
+    //
+    task automatic transfer (input tx_item tx);
+        @(tx_master_cb);
+        tx_master_cb.reset_n<= tx.reset_n;
+        tx_master_cb.enable <= tx.enable;
+        tx_master_cb.data   <= tx.data; // Done driving
+    endtask: transfer
 
-  //
-  // modports - pass the clocking here - does it work ?
-  //
-  modport tb(
-    clocking tx_master_cb
-  );
+    task automatic tap (input tx_item tx);
+        @(tx_slave_cb);
+        tx.reset_n= reset_n;
+        tx.enable = enable;
+        tx.data   = data;
+        tx.outa   = outa;
+        // It seems, using clocking block on the RHS does not work out well..
+    endtask: tap
 
-  modport dut(
-    clocking tx_master_cb,
-    input data,reset_n,enable,
-    output outa
-  );
+    //
+    // modports - pass the clocking here - does it work ?
+    //
+    modport tb(
+        clocking tx_master_cb
+    );
+
+    modport dut(
+        clocking tx_master_cb,
+            input data,reset_n,enable,
+            output outa
+    );
 
 endinterface: reg_if

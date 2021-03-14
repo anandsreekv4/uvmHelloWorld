@@ -13,22 +13,24 @@ module top;
     /*AUTOREG*/
     logic clk;
 
+    parameter WIDTH = 8;
+    int WIDTH_int = WIDTH;
+
     /* INTERFACE */
-    reg_if #(.WIDTH(8)) ireg_if(clk);
+    reg_if #(.WIDTH(WIDTH)) ireg_if(clk);
 
     /* DUT */
-    parameter WIDTH = 8;
     register  #(
         .WIDTH(WIDTH)
     ) ireg (
         /*AUTOINST*/
             // Outputs
-            .outa                       (ireg_if.dut.outa[WIDTH-1:0]),
+            .outa                       (ireg_if.outa[WIDTH-1:0]),
             // Inputs
             .clk                        (ireg_if.clk),
-            .reset_n                    (ireg_if.dut.reset_n),
-            .enable                     (ireg_if.dut.enable),
-            .data                       (ireg_if.dut.data[WIDTH-1:0])
+            .reset_n                    (ireg_if.reset_n),
+            .enable                     (ireg_if.enable),
+            .data                       (ireg_if.data[WIDTH-1:0])
     );
 
     /* CLOCK GEN */
@@ -48,7 +50,13 @@ module top;
             null,
             "uvm_test_top.*",
             "reg_if",
-            ireg_if.tb
+            ireg_if
+        );
+        uvm_config_db #(int)::set(
+            .cntxt(null),
+            .inst_name("uvm_test_top.*"),
+            .field_name("WIDTH"),
+            .value(WIDTH_int)
         );
     end
 

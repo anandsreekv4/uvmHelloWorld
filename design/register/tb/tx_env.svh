@@ -18,13 +18,24 @@ class tx_env extends uvm_env;
     endfunction: new
 
     // -- properties --
-    tx_agent agt; // only has 'n' num. of agents
+    tx_agent  agt; // only has 'n' num. of agents
     tx_fc_cov cov;
+    tx_scb    scb;
+    parameter WIDTH=8;
 
     // -- methods --
     virtual function void build_phase(uvm_phase phase);
-      agt = tx_agent::type_id::create("agt",this);
-      cov = tx_fc_cov::type_id::create("cov", this);
+        agt = tx_agent::type_id::create("agt",this);
+        cov = tx_fc_cov::type_id::create("cov", this);
+
+        // uvm_config_db #(int)::get(
+        //     .cntxt(null),
+        //     .inst_name("uvm_test_top.*"),
+        //     .field_name("WIDTH"),
+        //     .value(WIDTH)
+        // );
+
+        scb = tx_scb#(.WIDTH(WIDTH))::type_id::create("scb", this);
     endfunction: build_phase
 
     virtual function void connect_phase(uvm_phase phase);
@@ -34,6 +45,8 @@ class tx_env extends uvm_env;
     //  Monitor's analysis port connection needs to be done with them.
         super.connect_phase(phase);
         agt.pass_through_txap.connect(cov.analysis_export);
+        agt.pass_through_txap.connect(scb.analysis_imp_mon);
+        agt.pass_through_txap.connect(scb.analysis_imp_drv);
     endfunction: connect_phase
 
 endclass: tx_env

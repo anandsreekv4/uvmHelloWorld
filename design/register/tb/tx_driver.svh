@@ -63,11 +63,11 @@ class tx_driver extends uvm_driver #(tx_item);
     string s;
     `uvm_info("DRV_SHW_ITM",
       $sformatf(
-      "Got the following things:\n
-        reset_n  = 0x%0h \n
-        enable   = 0x%0h \n
-        data     = 0x%0h \n
-        str_byte = %0d \n
+      "Got the following things:\n \
+        reset_n  = 0x%0h \n         \
+        enable   = 0x%0h \n         \
+        data     = 0x%0h \n         \
+        str_byte = %0d \n           \
         str      = %s \n",
         tx.reset_n,
         tx.enable,
@@ -86,23 +86,26 @@ class tx_driver extends uvm_driver #(tx_item);
 
   endtask: show_item
 
-  virtual task pre_reset_phase (uvm_phase phase);
-    phase.raise_objection(this, "[pre_reset] Raising objection !");
+  // virtual task pre_reset_phase (uvm_phase phase);
+  //   phase.raise_objection(this, "[pre_reset] Raising objection !");
 
-    regif_vi.reset_n = 1'b1;    // De-assert reset initially
+  //   regif_vi.reset_n = 1'b1;    // De-assert reset initially
 
-    phase.drop_objection(this, "[pre_reset] Dropping objection");
-  endtask: pre_reset_phase
+  //   phase.drop_objection(this, "[pre_reset] Dropping objection");
+  // endtask: pre_reset_phase
 
-  virtual task reset_phase(uvm_phase phase);
-    phase.raise_objection(this,"[reset_phase] Raising objection");
+  // virtual task reset_phase(uvm_phase phase);
+  //   phase.raise_objection(this,"[reset_phase] Raising objection");
 
-    regif_vi.reset_n = 1'b0;    // asserting reset 
-    repeat (2) @(regif_vi.tx_master_cb);
-    regif_vi.reset_n = 1'b1;    // de-asserting reset 
+  //   tx_item tx = tx_item#()::type_id::create(.name("tx"), .cntxt(get_full_name()));
+  //   regif_vi.reset_n = 0;    // asserting reset 
+  //   regif_vi.enable  = 0;
+  //   regif_vi.data    = 0;
+  //   repeat (2) @(regif_vi.tx_master_cb);
+  //   regif_vi.reset_n = 1'b1;    // de-asserting reset 
 
-    phase.drop_objection(this,"[reset_phase] Dropping objection");
-  endtask: reset_phase
+  //   phase.drop_objection(this,"[reset_phase] Dropping objection");
+  // endtask: reset_phase
 
 
 endclass: tx_driver

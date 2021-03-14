@@ -58,8 +58,8 @@ function void tx_fc_cov::write(tx_item t);
     string s = "";
     this.tx = t;
 
-    s = $sformatf(s, "\n Below txn will be used for coverage:-");
-    s = $sformatf(s, this.tx.convert2string());
+    $sformat(s, "\n Below txn will be used for coverage:-");
+    $sformat(s, this.tx.convert2string());
     // Print out got values
     `uvm_info(get_type_name(), s, UVM_MEDIUM)
 

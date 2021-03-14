@@ -32,7 +32,7 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
   rand byte unsigned             str_byte[]; // a dynamic array
   rand bit unsigned  [WIDTH-1:0] data;
   rand bit		         enable;     // handshake sig. - no rand.
-  bit		                 reset_n;
+  rand bit                       reset_n;
   string	                 str;
   bit unsigned       [WIDTH-1:0] outa;     // DUT Output - no rand.
 
@@ -62,6 +62,10 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
       enable == 1; 
   }
 
+  constraint reset_c {
+      reset_n == 1;
+  }
+
   // -- Methods --
   // Now define constructor 
   function new (string name="tx_item");
@@ -84,7 +88,7 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
       `uvm_info (
         "PRAND",
         $sformatf(
-        "Randomized tx_item.str field based on str_byte and get_str
+        "Randomized tx_item.str field based on str_byte and get_str \
          \nstr => %s",
          this.str
         ),
@@ -100,8 +104,10 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
 
     super.do_copy(rhs); //2. Parent's props copy
 
+    this.reset_n = tx_rhs.reset_n;
     this.data = tx_rhs.data; //3. Copy this guy's fields
     this.enable = tx_rhs.enable;
+    this.outa = tx_rhs.outa;
     this.str_byte = tx_rhs.str_byte;
 
     //3b. Here you can provide any objects contained within tx.
@@ -113,14 +119,16 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
 
   virtual function bit do_compare (uvm_object rhs,uvm_comparer comparer);
     tx_item tx_rhs;
+
     if(!$cast(tx_rhs,rhs)) 
       `uvm_fatal(get_type_name(),"rhs to tx_rhs dwncast failed") //1.Check
 
-      return ( 
-      (this.data     === tx_rhs.data)       &&
-      (this.enable   === tx_rhs.enable)     &&
-      (this.str_byte === tx_rhs.str_byte) ); 
-      // Should also add the call to pld_h.do_copy
+    return ( 
+        (this.reset_n  === tx_rhs.reset_n)    &&
+        // (this.data     === tx_rhs.data)       &&  // Don't compare inputs !!
+        (this.enable   === tx_rhs.enable)     &&  // Don't compare inputs !!
+        (this.outa     === tx_rhs.outa)       
+    ); 
   endfunction:do_compare
 
   virtual function string convert2string();
@@ -136,19 +144,17 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
     string s = super.convert2string();
 
     $sformat(s, "%s\n ----- tx_item values ----- ",s);
+    $sformat(s, "%s\n reset_n  : 0x%0h", s,this.reset_n);
     $sformat(s, "%s\n Data     : 0x%0h", s,this.data);
     $sformat(s, "%s\n enable   : 0x%0h", s,this.enable);
     $sformat(s, "%s\n outa     : 0x%0h", s,this.outa);
     $sformat(s, "%s\n str_byte : %0h", s,this.str_byte);
     $sformat(s, "%s\n -------------------------- ",s);
-    $sformat(s, "%s\n %s",s,this.sprint(uvm_default_table_printer));
-    $sformat(s, "%s\n -------------------------- ",s);
+    if (uvm_report_enabled(UVM_HIGH)) begin
+        $sformat(s, "%s\n %s",s,this.sprint(uvm_default_table_printer));
+        $sformat(s, "%s\n -------------------------- ",s);
+    end
     return s;
-    // $sformat(s,
-    // "%s\n Payload : %s",
-    // ( pld_h ==null ) ? "null": pld_h.do_compare();
-    // );
-    //
     // Make sure to always call convert2string inside a `uvm_info
   endfunction: convert2string
     
@@ -181,17 +187,6 @@ class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
       return;
     endfunction: do_record
    
-    ////////////////////////////////////////
-    // do_reset - deprecated: use UVM phase
-    ////////////////////////////////////////
-    virtual task do_reset();
-	this.reset_n = 1'b0;
-	this.enable  = 1'b0;
-	this.data    = 1'b0;
-	#50; // TODO: Remove this guy - find better way to add reset
-	this.reset_n = 1'b1; // release
-    endtask: do_reset
-
     // Commenting out below - uvm_printer_table requires info either by
     // macros, or by pack and unpack methods. Haven't implemented pack
     // and neither have I done fully committed to `uvm_field_macros_* 

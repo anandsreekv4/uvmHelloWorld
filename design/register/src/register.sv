@@ -38,10 +38,10 @@ always_ff @(posedge clk or negedge reset_n) begin: flop
     if(!reset_n) begin
 	/*AUTORESET*/
 	// Beginning of autoreset for uninitialized flops
-	outa <= {WIDTH{1'b0}};
+	outa <= #1ns {WIDTH{1'b0}};
 	// End of automatics
     end else if (enable) begin
-	outa <= data;
+	outa <= #1ns data;
     end
 end
 

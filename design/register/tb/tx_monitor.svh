@@ -59,18 +59,17 @@ class tx_monitor extends uvm_monitor;
     endtask: run_phase
 
     virtual task monitor_items(tx_item tx);
-        string s;
+        string s = "";
 
         forever begin: mon_items
             // Check at every clock posedge
-            @regif_vi.tx_master_cb;
+            // @regif_vi.tx_slave_cb;
 
             // Calls the "tap" function of the interface
             regif_vi.tap(tx);
 
-            s = "";
-            s = $sformatf(s, "\nTAPPED values from Monitor:-");
-            s = $sformatf(s, tx.convert2string());
+            $sformat(s, "\nTAPPED values from Monitor:-");
+            $sformat(s, tx.convert2string());
 
             // Print out got values
             `uvm_info(get_type_name(),s, UVM_MEDIUM)

@@ -20,49 +20,50 @@
 /////////////////////////////////////////////////////////////////////////////
 
 class tx_seq #(parameter int DELAY=10 ) extends uvm_sequence #(tx_item#());
-  `uvm_object_utils(tx_seq#()) // Register
-  
-  // -- methods --
-  function new ( string name="tx_seq");
-    super.new(name);
-  endfunction
+    `uvm_object_utils(tx_seq#()) // Register
 
-  // body method
-  virtual task body();
-  //1. Create tx_item using factory
-  //2. Wait drv to req for the next tx_item via sqr
-  //3. Assign the tx with values
-  //4. Now send the tx_item to drv and wait for drv to complete it
-  // General guideline: Use IF instead of ASSERT because, people can
-  // disable all assertions together, and will cause this scenario to be 
-  // missed.
-  
-    // Will create and send tx_items
-    tx_item tx;
+    // -- methods --
+    function new ( string name="tx_seq");
+        super.new(name);
+    endfunction
 
-    // TEMP RESET
-    /* do_reset(); */
+    // body method
+    virtual task body();
+    //1. Create tx_item using factory
+    //2. Wait drv to req for the next tx_item via sqr
+    //3. Assign the tx with values
+    //4. Now send the tx_item to drv and wait for drv to complete it
+    // General guideline: Use IF instead of ASSERT because, people can
+        // disable all assertions together, and will cause this scenario to be 
+        // missed.
 
-    repeat (10) begin: send_10_times
-      // tx = new();                 // old-school creation. No need
-      #DELAY tx = tx_item::type_id::create(.name("tx"), .contxt(get_full_name())); // Factory create
+        // Will create and send tx_items
+        tx_item tx;
 
-      start_item(tx);                     // wait for driver to be ready
+        // TEMP RESET
+        do_reset();
 
-      if (! tx.randomize () ) begin       // No over-rides for now
-        `uvm_fatal("SEQ","Failed to randomise tx"); 
-      end
-      finish_item(tx); // Done generating this tx
-    end
-  endtask: body
+        repeat (10) begin: send_10_times
+            tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name())); // Factory create
 
-  virtual task do_reset();
-    tx_item rst_tx;
-    rst_tx = tx_item::type_id::create("rst_tx");
+            start_item(tx);                     // wait for driver to be ready
 
-    start_item(rst_tx);
-    rst_tx.do_reset();
-    finish_item(rst_tx);
-  endtask: do_reset
+            if (! tx.randomize () ) begin       // No over-rides for now
+                `uvm_fatal("SEQ","Failed to randomise tx"); 
+            end
+            finish_item(tx); // Done generating this tx
+        end
+    endtask: body
+
+    virtual task do_reset();
+        tx_item rst_tx = tx_item#()::type_id::create(.name("rst_tx"), .contxt(get_full_name()));
+        repeat (2) begin: two_cyc_reset
+            start_item(rst_tx);
+            rst_tx.reset_n = 0;
+            rst_tx.enable  = 0;
+            rst_tx.data    = 0;
+            finish_item(rst_tx);
+        end: two_cyc_reset
+    endtask: do_reset
 
 endclass: tx_seq
