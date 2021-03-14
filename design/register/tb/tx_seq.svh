@@ -19,7 +19,7 @@
 //                         start_item, finish_item
 /////////////////////////////////////////////////////////////////////////////
 
-class tx_seq #(parameter int DELAY=10 ) extends uvm_sequence #(tx_item#());
+class tx_seq #(parameter int DELAY=10 ) extends tx_base_seq #(.DELAY(DELAY));
     `uvm_object_utils(tx_seq#()) // Register
 
     // -- methods --
@@ -41,7 +41,7 @@ class tx_seq #(parameter int DELAY=10 ) extends uvm_sequence #(tx_item#());
         tx_item tx;
 
         // TEMP RESET
-        do_reset();
+        this.do_reset();
 
         repeat (10) begin: send_10_times
             tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name())); // Factory create
@@ -55,15 +55,5 @@ class tx_seq #(parameter int DELAY=10 ) extends uvm_sequence #(tx_item#());
         end
     endtask: body
 
-    virtual task do_reset();
-        tx_item rst_tx = tx_item#()::type_id::create(.name("rst_tx"), .contxt(get_full_name()));
-        repeat (2) begin: two_cyc_reset
-            start_item(rst_tx);
-            rst_tx.reset_n = 0;
-            rst_tx.enable  = 0;
-            rst_tx.data    = 0;
-            finish_item(rst_tx);
-        end: two_cyc_reset
-    endtask: do_reset
 
 endclass: tx_seq

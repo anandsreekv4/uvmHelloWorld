@@ -11,6 +11,7 @@ package tx_pkg;
   typedef class tx_env;
   typedef class tx_agt_config;
   typedef class tx_agent;
+  typedef class tx_base_seq;
   typedef class tx_seq;
   typedef class tx_item;
   typedef class tx_driver;
@@ -24,6 +25,7 @@ package tx_pkg;
   `include "tx_env.svh"
   `include "tx_agt_config.svh"
   `include "tx_agent.svh"
+  `include "tx_base_seq.svh"
   `include "tx_seq.svh"
   `include "tx_item.svh"
   `include "tx_driver.svh"
