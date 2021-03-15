@@ -38,7 +38,7 @@ task tx_rand_en_seq::body();
         tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name()));
 
         start_item(tx);
-        if (! tx.randomize() with {tx.enable inside {0};})
+        if (! tx.randomize() with {tx.enable inside {1};})
             `uvm_fatal("SEQ","Failed to randomise tx"); 
         finish_item(tx);
     end: send_11_times

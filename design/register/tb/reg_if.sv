@@ -29,7 +29,8 @@ interface reg_if #(parameter WIDTH = 8) (input logic clk);
     clocking tx_slave_cb @(posedge clk);
         default input #1step output #1ns;
         input data,reset_n,enable;
-        output outa;
+        // output outa;                // Cannot READ an output clockvar as it si write-only!
+        input outa;
     endclocking: tx_slave_cb
 
     // 
@@ -44,10 +45,10 @@ interface reg_if #(parameter WIDTH = 8) (input logic clk);
 
     task automatic tap (input tx_item tx);
         @(tx_slave_cb);
-        tx.reset_n= reset_n;
-        tx.enable = enable;
-        tx.data   = data;
-        tx.outa   = outa;
+        tx.reset_n= tx_slave_cb.reset_n;
+        tx.enable = tx_slave_cb.enable;
+        tx.data   = tx_slave_cb.data;
+        tx.outa   = tx_slave_cb.outa;
         // It seems, using clocking block on the RHS does not work out well..
     endtask: tap
 

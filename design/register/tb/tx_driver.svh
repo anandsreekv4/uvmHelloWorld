@@ -46,8 +46,8 @@ class tx_driver extends uvm_driver #(tx_item);
 
     forever begin                      // Send the packet
       seq_item_port.get_next_item(tx); // Now tx holds an obj
-      show_item(tx);                   // Goes to show_item task
       regif_vi.transfer(tx);
+      show_item(tx);                   // Goes to show_item task
       seq_item_port.item_done();       // Reply back to sqr port
     end
 

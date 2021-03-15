@@ -15,6 +15,9 @@ SIMOPTS+= +UVM_VERBOSITY=$(UVM_VERBOSITY)
 SIMOPTS+= -wlf trace.wlf
 SIMOPTS+= -uvmcontrol=all -classdebug -msgmode both
 SIMOPTS+= -coverage
+ifndef NORANDSEED
+    SIMOPTS+= -sv_seed random
+endif
 ifeq ($(DEBUG),1)
     SIMOPTS+= +UVM_CONFIG_DB_TRACE
     UVM_VERBOSITY=UVM_DEBUG
