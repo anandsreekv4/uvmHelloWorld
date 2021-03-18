@@ -17,7 +17,7 @@ module register (/*AUTOARG*/
    clk, reset_n, enable, data
    );
 
-parameter WIDTH = 8;
+import register_pkg::*;
 
 input		   clk;
 input		   reset_n;

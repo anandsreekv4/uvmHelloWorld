@@ -4,6 +4,8 @@ package tx_pkg;
   import uvm_pkg::*;        /* DO NOT DELETE */
   export uvm_pkg::*;        /* Package chaining - DID NOT WORK!*/
   `include "uvm_macros.svh" /* DO NOT DELETE */
+  import register_pkg::*;
+  export register_pkg::*;
 
   typedef class tx_test;
   typedef class tx_rand_en_test;

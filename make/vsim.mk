@@ -6,7 +6,7 @@ COMP_TARGETS = $(REFLIBS:%=$(WORKLIB)/%_compile)
 LSF = bsub -Ip
 VLIB= vlib
 VMAP= vmap
-VLOG= $(LSF) vlog
+VLOG= $(LSF) vlog $(VLOGFLAGS)
 # VSIM= $(LSF) vsim -novopt
 VSIM= $(LSF) vsim
 VOPTFLAGS = +acc -assertdebug -fsmdebug -work tb$(WORKSFX) +cover=bcesfx

@@ -16,8 +16,8 @@ class tx_agent extends uvm_agent; // Notice no specialisation
   // -- properties --
   tx_driver drv; // "has-a" relationship with driver, monitor, sequencer
   tx_monitor mon; // Will use it once we have a DUT.
-  uvm_sequencer #(tx_item#()) sqr; // sqr is never extended
-  uvm_analysis_port #(tx_item#()) pass_through_txap; // Instantiating the analysis port!
+  uvm_sequencer #(tx_item) sqr; // sqr is never extended
+  uvm_analysis_port #(tx_item) pass_through_txap; // Instantiating the analysis port!
 
   // -- methods --
 

@@ -63,6 +63,7 @@ class tx_test extends uvm_test;
       // to raise "objections" :
       phase.raise_objection(this, "Dhee thodangi!");
       seq.start(env.agt.sqr); // shows seq the hierarchy of sqr
+      phase.phase_done.set_drain_time(this, 20ns); // Drain time required for scb comparison to finish
       phase.drop_objection(this, "Dha theernu !!");
 
     endtask: run_phase

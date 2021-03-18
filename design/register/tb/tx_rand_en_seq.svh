@@ -35,7 +35,7 @@ task tx_rand_en_seq::body();
     this.do_reset();
 
     repeat (11) begin: send_11_times
-        tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name()));
+        tx = tx_item::type_id::create(.name("tx"), .contxt(get_full_name()));
 
         start_item(tx);
         if (! tx.randomize() with {tx.enable inside {1};})

@@ -29,6 +29,8 @@ UVM_VERBOSITY=UVM_MEDIUM
 
 TOPIMAGE = tb$(WORKSFX).top
 
+VLOGFLAGS += +define+WIDTH=32
+
 .PHONY: info
 info:
 	@echo "------------------------------------"
@@ -51,3 +53,4 @@ clean: simclean
 
 .PHONY: clobber
 clobber: simclobber
+	rm -rf certe* vsim_stack* verdi* novas* vfastLog

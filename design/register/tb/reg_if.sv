@@ -6,7 +6,7 @@
 //            virtual/dynamic object, which is used by the TB(fully dynamic)
 /////////////////////////////////////////////////////////////////////////
 
-interface reg_if #(parameter WIDTH = 8) (input logic clk);
+interface reg_if  (input logic clk);
     import tx_pkg::*; // This is required since there are references
     // to classes defined in this pkg.
     // data

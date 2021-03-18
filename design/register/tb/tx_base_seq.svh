@@ -18,7 +18,7 @@
 // 14.03.2021 : created
 //-----------------------------------------------------------------------------
 
-virtual class tx_base_seq #(parameter int DELAY=10) extends uvm_sequence #(tx_item#());
+virtual class tx_base_seq #(parameter int DELAY=10) extends uvm_sequence #(tx_item);
     `uvm_object_utils(tx_base_seq#())
 
     extern function new(string name="tx_seq");
@@ -35,7 +35,7 @@ task tx_base_seq::body();
 endtask: body
 
 task tx_base_seq::do_reset();
-    tx_item rst_tx = tx_item#()::type_id::create(.name("rst_tx"), .contxt(get_full_name()));
+    tx_item rst_tx = tx_item::type_id::create(.name("rst_tx"), .contxt(get_full_name()));
     repeat (2) begin: two_cyc_reset
         start_item(rst_tx);
         rst_tx.reset_n = 0;

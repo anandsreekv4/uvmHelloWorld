@@ -21,21 +21,14 @@ class tx_env extends uvm_env;
     tx_agent  agt; // only has 'n' num. of agents
     tx_fc_cov cov;
     tx_scb    scb;
-    parameter WIDTH=8;
+    int WIDTH;
+    /* parameter WIDTH=8; */
 
     // -- methods --
     virtual function void build_phase(uvm_phase phase);
         agt = tx_agent::type_id::create("agt",this);
         cov = tx_fc_cov::type_id::create("cov", this);
-
-        // uvm_config_db #(int)::get(
-        //     .cntxt(null),
-        //     .inst_name("uvm_test_top.*"),
-        //     .field_name("WIDTH"),
-        //     .value(WIDTH)
-        // );
-
-        scb = tx_scb#(.WIDTH(WIDTH))::type_id::create("scb", this);
+        scb = tx_scb::type_id::create("scb", this);
     endfunction: build_phase
 
     virtual function void connect_phase(uvm_phase phase);

@@ -23,10 +23,10 @@
 //     REVISION: ---
 /////////////////////////////////////////////////////////////////////////
 
-class tx_item #(parameter WIDTH = 8) extends uvm_sequence_item;
+class tx_item  extends uvm_sequence_item;
 
   // Register this seq class into factory
-  `uvm_object_utils(tx_item#())
+  `uvm_object_utils(tx_item)
 
   // -- Properties -- better to declare them rand  for control
   rand byte unsigned             str_byte[]; // a dynamic array

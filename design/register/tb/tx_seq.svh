@@ -22,6 +22,8 @@
 class tx_seq #(parameter int DELAY=10 ) extends tx_base_seq #(.DELAY(DELAY));
     `uvm_object_utils(tx_seq#()) // Register
 
+    const int WIDTH;
+
     // -- methods --
     function new ( string name="tx_seq");
         super.new(name);
@@ -44,7 +46,7 @@ class tx_seq #(parameter int DELAY=10 ) extends tx_base_seq #(.DELAY(DELAY));
         this.do_reset();
 
         repeat (10) begin: send_10_times
-            tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name())); // Factory create
+            tx = tx_item::type_id::create(.name("tx"), .contxt(get_full_name())); // Factory create
 
             start_item(tx);                     // wait for driver to be ready
 

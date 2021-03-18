@@ -20,7 +20,7 @@
 `uvm_analysis_imp_decl( _drv )
 `uvm_analysis_imp_decl( _mon )
 
-class tx_scb #(parameter WIDTH=8) extends uvm_scoreboard;
+class tx_scb  extends uvm_scoreboard;
     `uvm_component_utils(tx_scb)
 
     // uvm_tlm_analysis_fifos come with their own "imp" - not normal tlm_fifos
@@ -65,8 +65,8 @@ function void tx_scb::write_drv(tx_item tx);
 
 
 
-    tx_item tx_cp = tx_item#()::type_id::create("tx_cp", this);
-    if (last_tx == null) last_tx = tx_item#()::type_id::create("last_tx", this);
+    tx_item tx_cp = tx_item::type_id::create("tx_cp", this);
+    if (last_tx == null) last_tx = tx_item::type_id::create("last_tx", this);
 
     if (!tx_cp.reset_n) begin
         last_tx = tx_cp;           // Now both will reset back
@@ -90,7 +90,7 @@ function void tx_scb::write_drv(tx_item tx);
 endfunction: write_drv
 
 function void tx_scb::write_mon(tx_item tx);
-    tx_item tx_cp = tx_item#()::type_id::create("tx_cp");
+    tx_item tx_cp = tx_item::type_id::create("tx_cp");
     tx_cp.copy(tx);
     `uvm_info(get_type_name(), {"write_mon() on:-\n", tx_cp.convert2string}, UVM_MEDIUM)
     void'(actfifo.try_put(tx_cp));

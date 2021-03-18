@@ -13,16 +13,12 @@ module top;
     /*AUTOREG*/
     logic clk;
 
-    parameter WIDTH = 8;
-    int WIDTH_int = WIDTH;
 
     /* INTERFACE */
-    reg_if #(.WIDTH(WIDTH)) ireg_if(clk);
+    reg_if ireg_if(clk);
 
     /* DUT */
-    register  #(
-        .WIDTH(WIDTH)
-    ) ireg (
+    register  ireg (
         /*AUTOINST*/
             // Outputs
             .outa                       (ireg_if.outa[WIDTH-1:0]),
@@ -56,7 +52,7 @@ module top;
             .cntxt(null),
             .inst_name("uvm_test_top.*"),
             .field_name("WIDTH"),
-            .value(WIDTH_int)
+            .value(WIDTH)
         );
     end
 

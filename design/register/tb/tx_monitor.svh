@@ -45,7 +45,7 @@ class tx_monitor extends uvm_monitor;
     // we add a monitor items conditioning.
     task  run_phase (uvm_phase phase);
         // create a new tx item
-        tx_item tx = tx_item#()::type_id::create(.name("tx"), .contxt(get_full_name()));
+        tx_item tx = tx_item::type_id::create(.name("tx"), .contxt(get_full_name()));
 
         forever begin
             @(posedge regif_vi.reset_n); // wait till reset goes high
