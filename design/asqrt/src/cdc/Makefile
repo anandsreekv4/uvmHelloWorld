@@ -3,42 +3,48 @@
 
 # Directory : "/gpfs/iot/projects/BCM4350/work/anand/uvm_playground/uvmHelloWorld/design/asqrt/src/cdc/"
 # Platform  : ModelSim
-# Generated : 2021-03-22 00:02:35 ansn
+# Generated : 2021-03-22 20:42:35 ansn
 
 
 # Define compilation command and options
 
 COMPILE = vcom
-OPTIONS = -93 -work cdc
+OPTIONS = -93 -work $(basename $(notdir $(shell pwd)))
 
 
 # Define library paths
 
-LIBRARY-work = cdc
+LIBRARY-$(basename $(notdir $(shell pwd))) = work
 
 
 # Define library unit files
 
-UNIT-work-cdc_pkg = \
-	$(LIBRARY-work)/cdc_pkg/_primary.dat
-UNIT-work-dpram = \
-	$(LIBRARY-work)/dpram/_primary.dat
-UNIT-work-dpram-rtl = \
-	$(LIBRARY-work)/dpram/rtl.dat
-UNIT-work-ptr_dbl_sync = \
-	$(LIBRARY-work)/ptr_dbl_sync/_primary.dat
-UNIT-work-ptr_dbl_sync-rtl = \
-	$(LIBRARY-work)/ptr_dbl_sync/rtl.dat
+UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo_wptr_full/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo_wptr_full/rtl.dat
+UNIT-$(basename $(notdir $(shell pwd)))-cdc_pkg = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/cdc_pkg/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/dbl_sync/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/dbl_sync/rtl.dat
+UNIT-$(basename $(notdir $(shell pwd)))-dpram = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/dpram/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/dpram/rtl.dat
 
 
 # Define list of all library unit files
 
 ALL_UNITS = \
-	$(UNIT-work-cdc_pkg) \
-	$(UNIT-work-dpram) \
-	$(UNIT-work-dpram-rtl) \
-	$(UNIT-work-ptr_dbl_sync) \
-	$(UNIT-work-ptr_dbl_sync-rtl)
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-cdc_pkg) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync-rtl) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-dpram) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl)
 
 
 
@@ -58,44 +64,54 @@ clean :
 # Rule for creating library directory
 
 library : \
-		$(LIBRARY-work)
+		$(LIBRARY-$(basename $(notdir $(shell pwd))))
 
-$(LIBRARY-work) :
-	vlib $(LIBRARY-work); vmap work $(LIBRARY-work)
+$(LIBRARY-$(basename $(notdir $(shell pwd)))) :
+	vlib $(basename $(notdir $(shell pwd))); vmap $(basename $(notdir $(shell pwd))) $(basename $(notdir $(shell pwd)))
 
 
 # Rules for compiling single library units and their subhierarchy
 
+afifo_wptr_full : \
+		library \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl)
+
 cdc_pkg : \
 		library \
-		$(UNIT-work-cdc_pkg)
+		$(UNIT-$(basename $(notdir $(shell pwd)))-cdc_pkg)
+
+dbl_sync : \
+		library \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync-rtl)
 
 dpram : \
 		library \
-		$(UNIT-work-dpram) \
-		$(UNIT-work-dpram-rtl)
-
-ptr_dbl_sync : \
-		library \
-		$(UNIT-work-ptr_dbl_sync) \
-		$(UNIT-work-ptr_dbl_sync-rtl)
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dpram) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl)
 
 
 # Rules for compiling single library unit files
 
-$(UNIT-work-cdc_pkg) : \
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl) : \
+		afifo_wptr_full.vhd
+	$(COMPILE) $(OPTIONS) afifo_wptr_full.vhd
+
+$(UNIT-$(basename $(notdir $(shell pwd)))-cdc_pkg) : \
 		cdc_pkg.vhd
 	$(COMPILE) $(OPTIONS) cdc_pkg.vhd
 
-$(UNIT-work-dpram) \
-$(UNIT-work-dpram-rtl) : \
+$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync-rtl) : \
+		dbl_sync.vhd
+	$(COMPILE) $(OPTIONS) dbl_sync.vhd
+
+$(UNIT-$(basename $(notdir $(shell pwd)))-dpram) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl) : \
 		dpram.vhd
 	$(COMPILE) $(OPTIONS) dpram.vhd
-
-$(UNIT-work-ptr_dbl_sync) \
-$(UNIT-work-ptr_dbl_sync-rtl) : \
-		ptr_dbl_sync.vhd
-	$(COMPILE) $(OPTIONS) ptr_dbl_sync.vhd
 
 
 ### Makefile ends here

@@ -3,33 +3,36 @@
 
 # Directory : "/gpfs/iot/projects/BCM4350/work/anand/uvm_playground/uvmHelloWorld/design/asqrt/src/sqrt/"
 # Platform  : ModelSim
-# Generated : 2021-03-21 16:50:15 ansn
+# Generated : 2021-03-22 20:47:51 ansn
 
 
 # Define compilation command and options
 
 COMPILE = vcom
-OPTIONS = -93 -work sqrt
+OPTIONS = -93 -work $(basename $(notdir $(shell pwd)))
 
 
 # Define library paths
 
-LIBRARY-work = sqrt
+LIBRARY-$(basename $(notdir $(shell pwd))) = work
 
 
 # Define library unit files
 
-UNIT-work-sqrt-rtl = \
-	$(LIBRARY-work)/sqrt/rtl.dat
-UNIT-work-sqrt_pkg = \
-	$(LIBRARY-work)/sqrt_pkg/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-sqrt = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/sqrt/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-sqrt-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/sqrt/rtl.dat
+UNIT-$(basename $(notdir $(shell pwd)))-sqrt_pkg = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/sqrt_pkg/_primary.dat
 
 
 # Define list of all library unit files
 
 ALL_UNITS = \
-	$(UNIT-work-sqrt-rtl) \
-	$(UNIT-work-sqrt_pkg)
+	$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt-rtl) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt_pkg)
 
 
 
@@ -49,32 +52,32 @@ clean :
 # Rule for creating library directory
 
 library : \
-		$(LIBRARY-work)
+		$(LIBRARY-$(basename $(notdir $(shell pwd))))
 
-$(LIBRARY-work) :
-	vlib $(LIBRARY-work); vmap work $(LIBRARY-work)
+$(LIBRARY-$(basename $(notdir $(shell pwd)))) :
+	vlib $(basename $(notdir $(shell pwd))); vmap $(basename $(notdir $(shell pwd))) $(basename $(notdir $(shell pwd)))
 
 
 # Rules for compiling single library units and their subhierarchy
 
 sqrt : \
 		library \
-		$(UNIT-work-sqrt) \
-		$(UNIT-work-sqrt-rtl)
+		$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt-rtl)
 
 sqrt_pkg : \
 		library \
-		$(UNIT-work-sqrt_pkg)
+		$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt_pkg)
 
 
 # Rules for compiling single library unit files
 
-$(UNIT-work-sqrt) \
-$(UNIT-work-sqrt-rtl) : \
+$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt-rtl) : \
 		sqrt.vhd
 	$(COMPILE) $(OPTIONS) sqrt.vhd
 
-$(UNIT-work-sqrt_pkg) : \
+$(UNIT-$(basename $(notdir $(shell pwd)))-sqrt_pkg) : \
 		sqrt_pkg.vhd
 	$(COMPILE) $(OPTIONS) sqrt_pkg.vhd
 
