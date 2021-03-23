@@ -54,20 +54,21 @@ architecture rtl of afifo_wptr_full is
   signal fifo_full_s : std_logic                        := '0';  -- since fifo_full out cannot be read directly
 
   function conv2gray (
-    num : std_logic_vector(PWDTH downto 0))  -- input number in bin
+    num : std_logic_vector(PWDTH downto 0))       -- input number in bin
     return std_logic_vector is
+    variable vnum : unsigned(PWDTH downto 0) := (others => '0');  -- type conversion
   begin
-    return std_logic_vector((unsigned(num)/2) xor unsigned(num));     -- because shifted ver of binary ORed
-                                  -- with the binary produces GRAY
+    vnum := unsigned(num);
+    return std_logic_vector((vnum/2) xor vnum);
+    -- because shifted ver of binary ORed with the binary produces GRAY
   end function conv2gray;
 
   function wptr_rptr_gray_full_chk (
     ptr1 : std_logic_vector(PWDTH downto 0);  -- input 1 - should be gray
     ptr2 : std_logic_vector(PWDTH downto 0))  -- input 2 - should be gray
-    return std_logic is
-    variable val : boolean := FALSE;        -- since vhdl SUCKS!
+    return boolean is
   begin
-       val := (
+    return (
       -- on a wrp around, LSB PWDTH-2 bits would be same
       (ptr1(PWDTH-2 downto 0) = ptr2(PWDTH-2 downto 0)) and
       -- The MSB wouldn't be same (even for grays)
@@ -76,14 +77,8 @@ architecture rtl of afifo_wptr_full is
       -- wrp around
       (ptr1(PWDTH-1) /= ptr2(PWDTH-1))
       );
-
-      if val then
-        return '1';
-      else
-        return '0';
-      end if;
   end function wptr_rptr_gray_full_chk;
-    
+  
 begin  -- rtl
 
   -- purpose: incr wptr_bin on every clk if winc_i is present and not fifo_full
@@ -95,15 +90,28 @@ begin  -- rtl
     if wrstn_i = '0' then               -- asynchronous reset (active low)
       wptr_bin_s  <= (others => '0');
       wptr_gray_s <= (others => '0');
-      fifo_full_s <= '0';
     elsif wclk_i'event and wclk_i = '1' then   -- rising clock edge
       if ((winc_i = '1') and (fifo_full_s = '0')) then
         wptr_bin_s  <= std_logic_vector(unsigned(wptr_bin_s) + 1);  -- binary converted and stored
         wptr_gray_s <= conv2gray(wptr_bin_s);  -- gray converted and stored
-        fifo_full_s <= wptr_rptr_gray_full_chk(wptr_bin_s, wptr_gray_s);  --fifo_full checked
       end if;
     end if;
   end process p_bin_gry_incr;
+
+  -- purpose: to generate the fifo_full logic based on comparison of ptrs
+  -- type   : sequential
+  -- inputs : wclk_i, wrstn_i, wptr_bin_s, rptr_gray_sync_i
+  -- outputs: fifo_full_s
+  p_fifo_full : process (wclk_i, wrstn_i)
+  begin  -- process p_fifo_full
+    if wrstn_i = '0' then               -- asynchronous reset (active low)
+      fifo_full_s <= '0';
+    elsif wclk_i'event and wclk_i = '1' then  -- rising clock edge
+      if (wptr_rptr_gray_full_chk(wptr_gray_s, rptr_gray_sync_i)) then
+        fifo_full_s <= '1';             --fifo_full checked
+      end if;
+    end if;
+  end process p_fifo_full;
 
   fifo_full_o <= fifo_full_s;           -- registered fifo_full status sent
                                         -- out

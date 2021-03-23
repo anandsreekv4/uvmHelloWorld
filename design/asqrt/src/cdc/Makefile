@@ -3,7 +3,7 @@
 
 # Directory : "/gpfs/iot/projects/BCM4350/work/anand/uvm_playground/uvmHelloWorld/design/asqrt/src/cdc/"
 # Platform  : ModelSim
-# Generated : 2021-03-22 20:42:35 ansn
+# Generated : 2021-03-23 12:10:29 ansn
 
 
 # Define compilation command and options
@@ -19,6 +19,14 @@ LIBRARY-$(basename $(notdir $(shell pwd))) = work
 
 # Define library unit files
 
+UNIT-$(basename $(notdir $(shell pwd)))-afifo = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-afifo-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo/rtl.dat
+UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo_rptr_empty/_primary.dat
+UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty-rtl = \
+	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo_rptr_empty/rtl.dat
 UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full = \
 	$(LIBRARY-$(basename $(notdir $(shell pwd))))/afifo_wptr_full/_primary.dat
 UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl = \
@@ -38,6 +46,10 @@ UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl = \
 # Define list of all library unit files
 
 ALL_UNITS = \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo-rtl) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty) \
+	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty-rtl) \
 	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
 	$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl) \
 	$(UNIT-$(basename $(notdir $(shell pwd)))-cdc_pkg) \
@@ -72,6 +84,20 @@ $(LIBRARY-$(basename $(notdir $(shell pwd)))) :
 
 # Rules for compiling single library units and their subhierarchy
 
+afifo : \
+		library \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo-rtl) \
+		afifo_rptr_empty \
+		afifo_wptr_full \
+		dbl_sync \
+		dpram
+
+afifo_rptr_empty : \
+		library \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty-rtl)
+
 afifo_wptr_full : \
 		library \
 		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
@@ -93,6 +119,20 @@ dpram : \
 
 
 # Rules for compiling single library unit files
+
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo-rtl) : \
+		afifo.vhd \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dbl_sync) \
+		$(UNIT-$(basename $(notdir $(shell pwd)))-dpram)
+	$(COMPILE) $(OPTIONS) afifo.vhd
+
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty) \
+$(UNIT-$(basename $(notdir $(shell pwd)))-afifo_rptr_empty-rtl) : \
+		afifo_rptr_empty.vhd
+	$(COMPILE) $(OPTIONS) afifo_rptr_empty.vhd
 
 $(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full) \
 $(UNIT-$(basename $(notdir $(shell pwd)))-afifo_wptr_full-rtl) : \
