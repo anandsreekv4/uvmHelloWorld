@@ -155,3 +155,7 @@ $(UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl) : \
 
 
 ### Makefile ends here
+sim: all
+	vlog -work cdc tb_afifo.sv
+	vopt +acc -fsmdebug -assertdebug tb_afifo -o opt
+	vsim opt

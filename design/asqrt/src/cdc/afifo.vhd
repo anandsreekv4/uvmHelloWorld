@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-23
--- Last update: 2021-03-23
+-- Last update: 2021-03-24
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ entity afifo is
   
   generic (
     PWDTH : integer := 4;  -- Pointer width. The fifomem is configured to be 2**PWDTH deep
-    DWDTH : integer := 8);  -- Data width of the fifo. Transport this many bits per clk cycle
+    DWDTH : integer := 8); -- Data width of the fifo. Transport this many bits per clk cycle
 
   port (
     wclk_i , rclk_i  : in  std_logic;   -- clks

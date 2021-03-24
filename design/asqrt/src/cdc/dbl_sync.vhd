@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-21
--- Last update: 2021-03-22
+-- Last update: 2021-03-24
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ use ieee.numeric_std.all;
 entity dbl_sync is
   
   generic (
-    WIDTH : integer := 4);              -- data width
+    WIDTH : integer := 1);              -- data width
 
   port (
     clk_i       : in  std_logic;        -- input clk
