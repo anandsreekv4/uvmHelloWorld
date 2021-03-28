@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-23
--- Last update: 2021-03-24
+-- Last update: 2021-03-25
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -35,22 +35,22 @@ entity afifo is
   
   generic (
     PWDTH : integer := 4;  -- Pointer width. The fifomem is configured to be 2**PWDTH deep
-    DWDTH : integer := 8); -- Data width of the fifo. Transport this many bits per clk cycle
+    DWDTH : integer := 8);  -- Data width of the fifo. Transport this many bits per clk cycle
 
   port (
     wclk_i , rclk_i  : in  std_logic;   -- clks
-    wrstn_i, rrstn_i : in  std_logic;   -- resets. All resets are active low and asynch
+    wrstn_i, rrstn_i : in  std_logic;  -- resets. All resets are active low and asynch
     winc_i , rinc_i  : in  std_logic;   -- read and write commands to fifo
     wdata_i          : in  std_logic_vector(DWDTH-1 downto 0);  -- Data to be written into
-                                        -- fifomem. To be writeen from rd clk domain
+                                       -- fifomem. To be writeen from rd clk domain
     rdata_o          : out std_logic_vector(DWDTH-1 downto 0);  -- To be read
                                         -- from read clk domain 
     fifo_full_o      : out std_logic;   -- fifo full interrupt
     fifo_ovflw_o     : out std_logic;   -- fifo overflow interrupt - indicates
-                                        -- a write command issued even after full
+                                       -- a write command issued even after full
     fifo_empty_o     : out std_logic;   -- fifo empty interrupt
     fifo_undrflw_o   : out std_logic);  -- fifo underflow interrupt - indicates
-                                        -- a read command issued even after empty
+                                       -- a read command issued even after empty
 end afifo;
 
 library cdc;
@@ -60,7 +60,7 @@ use cdc.cdc_pkg.all;
 -- architecture: rtl
 -------------------------------------------------------------------------------
 architecture rtl of afifo is
-  signal waddr, raddr              : std_logic_vector(DWDTH-1 downto 0);  -- addr interconnect wires
+  signal waddr, raddr              : std_logic_vector(PWDTH-1 downto 0);  -- addr interconnect wires
   signal wren, fifo_full           : std_logic;  -- coming from wptr_full blk
   signal wptr_gray_sync, wptr_gray : std_logic_vector(PWDTH downto 0);
   signal rptr_gray_sync, rptr_gray : std_logic_vector(PWDTH downto 0);
@@ -122,6 +122,7 @@ begin  -- rtl
       data_i      => wptr_gray,
       data_sync_o => wptr_gray_sync);
 
-  wren <= winc_i and (not fifo_full);
+  wren        <= winc_i and (not fifo_full);
+  fifo_full_o <= fifo_full;
   
 end rtl;

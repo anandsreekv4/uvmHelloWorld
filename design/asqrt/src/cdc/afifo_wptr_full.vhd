@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-22
--- Last update: 2021-03-22
+-- Last update: 2021-03-28
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -49,12 +49,12 @@ end afifo_wptr_full;
 -- architecture: rtl
 -------------------------------------------------------------------------------
 architecture rtl of afifo_wptr_full is
-  signal wptr_bin_s  : std_logic_vector(PWDTH downto 0) := (others => '0');  -- binary format of wptr(reg)
-  signal wptr_gray_s : std_logic_vector(PWDTH downto 0) := (others => '0');  -- gray format of wptr(reg)
-  signal fifo_full_s : std_logic                        := '0';  -- since fifo_full out cannot be read directly
+  signal wptr_bin_s  : std_logic_vector(PWDTH downto 0);  -- binary format of wptr(reg)
+  signal wptr_gray_s : std_logic_vector(PWDTH downto 0);  -- gray format of wptr(reg)
+  signal fifo_full_s : std_logic;  -- since fifo_full out cannot be read directly
 
   function conv2gray (
-    num : std_logic_vector(PWDTH downto 0))       -- input number in bin
+    num : std_logic_vector(PWDTH downto 0))  -- input number in bin
     return std_logic_vector is
     variable vnum : unsigned(PWDTH downto 0) := (others => '0');  -- type conversion
   begin
@@ -109,6 +109,8 @@ begin  -- rtl
     elsif wclk_i'event and wclk_i = '1' then  -- rising clock edge
       if (wptr_rptr_gray_full_chk(wptr_gray_s, rptr_gray_sync_i)) then
         fifo_full_s <= '1';             --fifo_full checked
+      else
+        fifo_full_s <= '0';
       end if;
     end if;
   end process p_fifo_full;
@@ -122,5 +124,6 @@ begin  -- rtl
   waddr_o <= wptr_bin_s(PWDTH-1 downto 0);  -- access the memory location
                                             -- from the binary ptr
 
+  wptr_gray_o <= wptr_gray_s;
 
 end rtl;

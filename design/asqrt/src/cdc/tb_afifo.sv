@@ -31,7 +31,10 @@ module tb_afifo;
    logic             rinc_i;
    logic [DWDTH-1:0] wdata_i;
    logic [DWDTH-1:0] rdata_o;
+   logic [PWDTH-1:0] waddr_i;
+   logic [PWDTH-1:0] raddr_i;
    logic             fifo_full_o;
+   logic             fifo_empty_o;
    logic             fifo_ovflw_o;
    logic             fifo_undrflw_o;
    
@@ -62,17 +65,29 @@ module tb_afifo;
          end: rclk_rst
       join
 
-      repeat (10) @(posedge wclk_i) begin:gen_seq
-         waddr_i = $urandom;
+      repeat (17) @(posedge wclk_i) begin:gen_seq
+         wdata_i = $urandom;
          winc_i  = 1;
+         @(posedge wclk_i);
+         winc_i  = 0;
       end:gen_seq
       
-      repeat (10) @(posedge wclk_i) begin:gen_seq_rd
-         raddr_i = $urandom;
+      repeat (17) @(posedge wclk_i) begin:gen_seq_rd
          rinc_i  = 1;
+         @(posedge rclk_i);
+         rinc_i  = 0;
       end:gen_seq_rd
+
+      #100;
+      $finish;
       
    end:seq
+
+   /* DUMP VCD */
+   initial begin: dump_vcd
+       $dumpfile("dump.vcd");
+       $dumpvars;
+   end: dump_vcd
 endmodule: tb_afifo
 
 // ^L

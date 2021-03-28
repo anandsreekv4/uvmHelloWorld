@@ -155,7 +155,14 @@ $(UNIT-$(basename $(notdir $(shell pwd)))-dpram-rtl) : \
 
 
 ### Makefile ends here
-sim: all
-	vlog -work cdc tb_afifo.sv
-	vopt +acc -fsmdebug -assertdebug tb_afifo -o opt
-	vsim opt
+VHDL_SRC = dpram.vhd dbl_sync.vhd afifo_rptr_empty.vhd afifo_wptr_full.vhd cdc_pkg.vhd afifo.vhd
+SV_SRC = tb_afifo.sv
+
+sim: 
+	bsub -Ip vcom -work cdc $(VHDL_SRC)
+	bsub -Ip vlog -work cdc $(SV_SRC)
+	# bsub -Ip vhdlcom -nclib -work cdc $(VHDL_SRC)
+	# bsub -Ip vericom -sv -nclib -work cdc $(SV_SRC)
+	# bsub -Ip vopt +acc -fsmdebug -assertdebug tb_afifo -work cdc +cover=bcesfx -o opt -designfile design.bin -debug
+	bsub -Ip vopt +acc -fsmdebug -assertdebug tb_afifo -work cdc +cover=bcesfx -o opt -debug
+	bsub -Ip vsim -work cdc opt -do "add wave -r *;" -assertdebug

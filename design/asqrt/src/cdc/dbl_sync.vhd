@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-21
--- Last update: 2021-03-24
+-- Last update: 2021-03-27
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -77,8 +77,9 @@ begin  -- rtl
       data_sync1 <= data_i;
       data_sync2 <= data_sync1;
     end if;
-
-    assert (count_ones(data_i) <= 1) report "data_i of sync should be one-hot!!" severity error;
+    --assert (((data_sync1 xor data_sync2) = 1) and data_sync1'high > 1)
+    --  report "data_i of sync should be single bit or gray encoded!!"
+    --  severity error;
   end process p_sync;
 
   data_sync_o <= data_sync2;

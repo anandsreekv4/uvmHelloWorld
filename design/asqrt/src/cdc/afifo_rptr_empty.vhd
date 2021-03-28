@@ -6,7 +6,7 @@
 -- Author     : Anand S/INDIA  <ansn@aremote05>
 -- Company    : 
 -- Created    : 2021-03-22
--- Last update: 2021-03-22
+-- Last update: 2021-03-28
 -- Platform   : 
 -- Standard   : VHDL'87
 -------------------------------------------------------------------------------
@@ -51,9 +51,10 @@ end afifo_rptr_empty;
 -------------------------------------------------------------------------------
 
 architecture rtl of afifo_rptr_empty is
-  signal rptr_bin_s   : std_logic_vector(PWDTH downto 0) := (others => '0');  -- binary format of wptr(reg)
-  signal rptr_gray_s  : std_logic_vector(PWDTH downto 0) := (others => '0');  -- gray format of wptr(reg)
-  signal fifo_empty_s : std_logic                        := '0';  -- since fifo_empty out cannot be read directly
+  signal rptr_bin_s        : std_logic_vector(PWDTH downto 0);  -- binary format of wptr(reg)
+  signal rptr_gray_s       : std_logic_vector(PWDTH downto 0);  -- gray format of wptr(reg)
+  signal fifo_empty_s      : std_logic;  -- since fifo_empty out cannot be read directly
+  signal fifo_empty_next_s : std_logic;  -- for debug
 
   function conv2gray (
     num : std_logic_vector(PWDTH downto 0))  -- input number in bin
@@ -78,9 +79,8 @@ begin  -- rtl
       rptr_gray_s <= (others => '0');
     elsif rclk_i'event and rclk_i = '1' then   -- rising clock edge
       if ((rinc_i = '1') and (fifo_empty_s = '0')) then
-        rptr_bin_s  <= std_logic_vector(unsigned(rptr_bin_s) + 1);  -- binary
-                                        -- converted and stored
-        rptr_gray_s <= conv2gray(rptr_bin_s);  -- gray converted and stored
+        rptr_bin_s  <= std_logic_vector(unsigned(rptr_bin_s) + 1);  -- binary converted and stored
+        rptr_gray_s <= conv2gray(rptr_bin_s);  -- converted and stored
       end if;
     end if;
   end process p_bin_gry_incr;
@@ -91,21 +91,23 @@ begin  -- rtl
   -- outputs: fifo_empty_s
   p_fifo_empty : process (rclk_i, rrstn_i)
   begin  -- process p_fifo_empty
-    if rrstn_i = '1' then               -- asynchronous reset (active low)
+    if rrstn_i = '0' then               -- asynchronous reset (active low)
       fifo_empty_s <= '1';              -- empty should be HIONRST
     elsif rclk_i'event and rclk_i = '1' then  -- rising clock edge
       if (rptr_gray_s = wptr_gray_sync_i) then
         fifo_empty_s <= '1';            -- assert when both are same
       else
-        fifo_empty_s <= '0';            -- When not equal, fifo is not empty
+        fifo_empty_s <= '0';              -- When not equal, fifo is not empty
       end if;
     end if;
   end process p_fifo_empty;
+
 
   fifo_empty_o   <= fifo_empty_s;
   fifo_undrflw_o <= fifo_empty_s and rinc_i;  -- overflows when accessed while
                                               -- empty
   raddr_o        <= rptr_bin_s(PWDTH-1 downto 0);  -- only MSB-1 bits addressable in
                                                    -- memory
+  rptr_gray_o    <= rptr_gray_s;
 
 end rtl;
