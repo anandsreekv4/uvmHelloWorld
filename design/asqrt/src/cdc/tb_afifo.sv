@@ -38,7 +38,7 @@ module tb_afifo;
    logic             fifo_ovflw_o;
    logic             fifo_undrflw_o;
    
-   afifo #(.PWDTH(PWDTH),.DWDTH(DWDTH)) u_afifo(.*);
+   afifo #(.PWDTH(PWDTH), .DWDTH(DWDTH)) u_afifo(.*);
 
    initial begin: clk_gen_wclk
       wclk_i <= 0;
@@ -80,7 +80,6 @@ module tb_afifo;
 
       #100;
       $finish;
-      
    end:seq
 
    /* DUMP VCD */

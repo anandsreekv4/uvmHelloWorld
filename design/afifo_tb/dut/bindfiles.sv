@@ -1,15 +1,14 @@
 //-----------------------------------------------------------------------------
-// Title         : dbl_sync_asserts
+// Title         : bindfiles
 // Project       : cdc
 //-----------------------------------------------------------------------------
-// File          : dbl_sync_asserts.sv
+// File          : bindfiles.sv
 // Author        : Anand S/INDIA  <ansn@aremote05>
 // Created       : 28.03.2021
 // Last modified : 28.03.2021
 //-----------------------------------------------------------------------------
 // Description :
-// The assertions module for dbl_sync entity. Will be linked to it with
-// "bindfiles".
+// bindfiles module to include binding of assertions to the various DUTs
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 by Anand Sreekumar This model is the confidential and
 // proprietary property of Anand Sreekumar and the possession or use of this
@@ -19,17 +18,13 @@
 // 28.03.2021 : created
 //-----------------------------------------------------------------------------
 
-module dbl_sync_asserts #(
-   parameter WIDTH = 1			  
-) (
-   input             clk_i,
-   input             rstn_i,
-   input [WIDTH-1:0] data_i,
-   input [WIDTH-1:0] data_sync_o
-);
+`ifndef ASSRT_FILES_INCLUDED
+    `define DBL_SYNC_ASSRT_INCLUDED
+    `include "dbl_sync_asserts.sv"
+`endif //!ASSRT_FILES_INCLUDED
 
-   ERR_DBL_SYNC_DI_NOT_GRAY_ENC:
-     assert property (@(posedge clk_i) disable iff(!rstn_i || (WIDTH < 1))
-		      (!$stable(data_i)) |-> $onehot(data_i ^ $past(data_i)) && (WIDTH > 1));
-       					      
-endmodule: dbl_sync_asserts
+module bindfiles;
+   
+   bind dbl_sync dbl_sync_asserts #(.WIDTH(WIDTH)) p1 (.*);
+   
+endmodule: bindfiles

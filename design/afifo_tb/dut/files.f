@@ -1,0 +1,9 @@
+cdc_pkg.vhd
+dbl_sync.vhd
+bindfiles.sv
+afifo_pkg.sv
+afifo.vhd
+afifo_rptr_empty.vhd
+dpram.vhd
+dbl_sync_asserts.sv
+afifo_wptr_full.vhd
