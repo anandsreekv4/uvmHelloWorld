@@ -7,7 +7,6 @@ certe_*
 *_compile
 elab
 work
-.*.sw*
 *.bak
 .simvision
 INCA_libs

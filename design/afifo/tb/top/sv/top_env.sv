@@ -143,7 +143,16 @@ task top_env::run_phase(uvm_phase phase);
   vseq.set_starting_phase(phase);
   vseq.start(null);
 
-  // You can insert code here by setting top_env_append_to_run_phase in file common.tpl
+  // Start of inlined include file ../../design/afifo/tb/include/test_drain_time.sv
+  phase.raise_objection(this, "Raising objection from top_env::run_phase!");
+  `ifndef UVM_POST_VERSION_1_1
+      uvm_test_done.set_drain_time(this, 1000);
+  `else
+      uvm_objection obj = phase.get_objection();
+      obj.set_drain_time(this, 1000);
+  `endif
+  phase.drop_objection(this, "Dropping objection from top_env::run_phase!");
+  // End of inlined include file
 
 endtask : run_phase
 

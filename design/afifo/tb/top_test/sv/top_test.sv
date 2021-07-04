@@ -48,7 +48,7 @@ endfunction : new
 
 function void top_test::build_phase(uvm_phase phase);
 
-  `include "test_drain_time.sv"
+  // You can insert code here by setting test_prepend_to_build_phase in file common.tpl
 
   // You could modify any test-specific configuration object variables here
 
