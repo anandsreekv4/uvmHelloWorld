@@ -1,0 +1,1 @@
+../easier_uvm_gen.pl afifo_wr_if.tpl afifo_rd_if.tpl

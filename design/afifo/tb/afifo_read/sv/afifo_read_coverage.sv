@@ -1,10 +1,15 @@
 // You can insert code here by setting file_header_inc in file common.tpl
 
 //=============================================================================
-// Project  : afifo_tb
+// Copyright (c) Anand Sreekumar
+//=============================================================================
+// Project  : ../../design/afifo
 //
 // File Name: afifo_read_coverage.sv
 //
+// Author   : Name   : Anand Sreekumar
+//            Email  : anandsreekv4@gmail.com
+//            Year   : 2021
 //
 // Version:   1.0
 //
@@ -25,7 +30,7 @@ class afifo_read_coverage extends uvm_subscriber #(rd_transaction);
   bit               m_is_covered;
   rd_transaction    m_item;
      
-  // Start of inlined include file afifo_tb/tb/include/afifo_read_cover_inc.sv
+  // Start of inlined include file ../../design/afifo/tb/include/afifo_read_cover_inc.sv
   covergroup m_cov;
       option.per_instance = 1;
   

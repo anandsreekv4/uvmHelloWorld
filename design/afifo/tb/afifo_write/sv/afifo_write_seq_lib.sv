@@ -1,10 +1,15 @@
 // You can insert code here by setting file_header_inc in file common.tpl
 
 //=============================================================================
-// Project  : afifo_tb
+// Copyright (c) Anand Sreekumar
+//=============================================================================
+// Project  : ../../design/afifo
 //
 // File Name: afifo_write_seq_lib.sv
 //
+// Author   : Name   : Anand Sreekumar
+//            Email  : anandsreekv4@gmail.com
+//            Year   : 2021
 //
 // Version:   1.0
 //
@@ -63,7 +68,7 @@ endfunction: set_starting_phase
 `endif
 
 
-// Start of inlined include file afifo_tb/tb/include/afifo_write_reset_seq.sv
+// Start of inlined include file ../../design/afifo/tb/include/afifo_write_reset_seq.sv
 class afifo_write_reset_seq extends afifo_write_default_seq;
     `uvm_object_utils(afifo_write_reset_seq)
 

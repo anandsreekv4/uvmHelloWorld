@@ -1,10 +1,15 @@
 // You can insert code here by setting file_header_inc in file common.tpl
 
 //=============================================================================
-// Project  : afifo_tb
+// Copyright (c) Anand Sreekumar
+//=============================================================================
+// Project  : ../../design/afifo
 //
 // File Name: afifo_write_driver.sv
 //
+// Author   : Name   : Anand Sreekumar
+//            Email  : anandsreekv4@gmail.com
+//            Year   : 2021
 //
 // Version:   1.0
 //
@@ -54,7 +59,7 @@ task afifo_write_driver::run_phase(uvm_phase phase);
 endtask : run_phase
 
 
-// Start of inlined include file afifo_tb/tb/include/afifo_write_do_drive.sv
+// Start of inlined include file ../../design/afifo/tb/include/afifo_write_do_drive.sv
 task afifo_write_driver::do_drive();
     @(posedge vif.wclk_i);
     vif.winc_i <= req.winc; // modification so winc only when out of reset

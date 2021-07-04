@@ -1,10 +1,15 @@
 // You can insert code here by setting file_header_inc in file common.tpl
 
 //=============================================================================
-// Project  : afifo_tb
+// Copyright (c) Anand Sreekumar
+//=============================================================================
+// Project  : ../../design/afifo
 //
 // File Name: top_config.sv
 //
+// Author   : Name   : Anand Sreekumar
+//            Email  : anandsreekv4@gmail.com
+//            Year   : 2021
 //
 // Version:   1.0
 //

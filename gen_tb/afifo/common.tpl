@@ -1,6 +1,6 @@
 dut_top = afifo
-project = afifo
-author  = Anand Sreekumar
+project = ../../design/afifo
+name    = Anand Sreekumar
 email   = anandsreekv4@gmail.com
 year    = 2021
 copyright = Copyright (c) Anand Sreekumar
