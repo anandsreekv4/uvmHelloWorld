@@ -11,8 +11,10 @@ comments_at_include_locations = yes
 common_pkg = afifo_pkg.sv
 top_default_seq_count = 5
 
-top_seq_inc = top_default_with_reset_seq.sv                     inline
+top_seq_inc = top_vseq_lib.sv                                   inline
 
 top_factory_set = top_default_seq write_5_read_5_seq
 
 top_env_append_to_run_phase = test_drain_time.sv                inline
+
+test_inc_after_class = top_wX_rXp1_test.sv                      inline

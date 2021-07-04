@@ -4,6 +4,8 @@ UVM_VERBOSITY=UVM_HIGH
 DUT_INC = +incdir+../dut
 VHDL_SRC = dpram.vhd dbl_sync.vhd afifo_rptr_empty.vhd afifo_wptr_full.vhd cdc_pkg.vhd afifo.vhd
 
+SV_SEED = random
+
 SV_SRC = \
 ../dut/afifo_pkg.sv \
 ../tb/afifo_write/sv/afifo_write_pkg.sv \
@@ -54,6 +56,7 @@ ncsim:
 	    +UVM_VERBOSITY=$(UVM_VERBOSITY)	\
 	    +UVM_TESTNAME=$(UVM_TESTNAME)	\
 	    -abvevalnochange		\
+	    -svseed $(SV_SEED)		\
 	    $(TOP_MODULE:%=-top %)	\
 	    -makelib cdc		\
 	    -v93			\
