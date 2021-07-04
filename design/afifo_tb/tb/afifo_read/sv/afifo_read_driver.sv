@@ -8,7 +8,6 @@
 //
 // Version:   1.0
 //
-// Code created by Easier UVM Code Generator version 2017-01-19 on Sat Jun 26 22:30:53 2021
 //=============================================================================
 // Description: Driver for afifo_read
 //=============================================================================
@@ -55,7 +54,15 @@ task afifo_read_driver::run_phase(uvm_phase phase);
 endtask : run_phase
 
 
-`include "afifo_read_do_drive.sv"
+// Start of inlined include file afifo_tb/tb/include/afifo_read_do_drive.sv
+task afifo_read_driver::do_drive();
+    @(posedge vif.rclk_i);
+    vif.rinc_i <= req.rinc; // modification so rinc only when out of reset
+    vif.rrstn_i<= req.rrstn;
+    @(posedge vif.rclk_i);
+    vif.rinc_i <= 0;
+endtask: do_drive
+// End of inlined include file
 
 // You can insert code here by setting driver_inc_after_class in file afifo_rd_if.tpl
 

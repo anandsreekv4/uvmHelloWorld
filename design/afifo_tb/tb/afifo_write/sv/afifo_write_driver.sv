@@ -8,7 +8,6 @@
 //
 // Version:   1.0
 //
-// Code created by Easier UVM Code Generator version 2017-01-19 on Sat Jun 26 22:30:53 2021
 //=============================================================================
 // Description: Driver for afifo_write
 //=============================================================================
@@ -55,7 +54,16 @@ task afifo_write_driver::run_phase(uvm_phase phase);
 endtask : run_phase
 
 
-`include "afifo_write_do_drive.sv"
+// Start of inlined include file afifo_tb/tb/include/afifo_write_do_drive.sv
+task afifo_write_driver::do_drive();
+    @(posedge vif.wclk_i);
+    vif.winc_i <= req.winc; // modification so winc only when out of reset
+    vif.wdata_i<= req.wdata;
+    vif.wrstn_i<= req.wrstn;
+    @(posedge vif.wclk_i);
+    vif.winc_i <= 0;
+endtask: do_drive
+// End of inlined include file
 
 // You can insert code here by setting driver_inc_after_class in file afifo_wr_if.tpl
 

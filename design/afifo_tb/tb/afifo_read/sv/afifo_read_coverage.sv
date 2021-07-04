@@ -8,7 +8,6 @@
 //
 // Version:   1.0
 //
-// Code created by Easier UVM Code Generator version 2017-01-19 on Sat Jun 26 22:30:53 2021
 //=============================================================================
 // Description: Coverage for agent afifo_read
 //=============================================================================
@@ -26,7 +25,23 @@ class afifo_read_coverage extends uvm_subscriber #(rd_transaction);
   bit               m_is_covered;
   rd_transaction    m_item;
      
-  `include "afifo_read_cover_inc.sv"
+  // Start of inlined include file afifo_tb/tb/include/afifo_read_cover_inc.sv
+  covergroup m_cov;
+      option.per_instance = 1;
+  
+      cp_wdata: coverpoint m_item.rdata {
+          bins zero = {0};
+          bins one  = {1};
+          bins first_half = { [1            : (2**(DWDTH-1) - 1)] };
+          bins sec_half   = { [2**(DWDTH-1) : (2**(DWDTH)   - 1)] };
+      }
+  
+      cp_wrstn: coverpoint m_item.rrstn {
+          bins reset_tx     = {0};
+          bins non_reset_tx = {1};
+      }
+  endgroup: m_cov
+  // End of inlined include file
 
   // You can remove new, write, and report_phase by setting agent_cover_generate_methods_inside_class = no in file afifo_rd_if.tpl
 
