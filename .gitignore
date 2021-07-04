@@ -8,3 +8,9 @@ certe_*
 elab
 work
 .*.sw*
+*.bak
+.simvision
+INCA_libs
+irun.*
+novas*log
+easier_uvm_gen.log

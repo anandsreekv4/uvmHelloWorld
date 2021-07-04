@@ -5,6 +5,8 @@ email   = anandsreekv4@gmail.com
 year    = 2021
 copyright = Copyright (c) Anand Sreekumar
 
+dut_source_path = ../../design/afifo/dut
+
 comments_at_include_locations = yes
 common_pkg = afifo_pkg.sv
 top_default_seq_count = 5
