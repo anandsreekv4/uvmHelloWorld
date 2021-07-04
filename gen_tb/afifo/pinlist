@@ -1,0 +1,18 @@
+!afifo_write_if
+wclk_i         wclk_i
+wrstn_i        wrstn_i
+winc_i         winc_i
+wdata_i        wdata_i
+fifo_full_o    fifo_full_o
+fifo_ovflw_o   fifo_ovflw_o
+
+!afifo_read_if
+rclk_i          rclk_i
+rrstn_i         rrstn_i
+rinc_i          rinc_i
+rdata_o         rdata_o
+fifo_empty_o    fifo_empty_o
+fifo_undrflw_o  fifo_undrflw_o
+
+PAR = PWDTH 4
+PAR = DWDTH 8
