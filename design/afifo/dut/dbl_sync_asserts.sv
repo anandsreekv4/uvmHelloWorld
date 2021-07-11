@@ -22,10 +22,10 @@
 module dbl_sync_asserts #(
    parameter WIDTH = 1			  
 ) (
-   input             clk_i,
-   input             rstn_i,
-   input [WIDTH-1:0] data_i,
-   input [WIDTH-1:0] data_sync_o
+   input logic             clk_i,
+   input logic             rstn_i,
+   input logic [WIDTH-1:0] data_i,
+   input logic [WIDTH-1:0] data_sync_o
 );
 
     //------------------------------------------------------------------------
@@ -35,8 +35,8 @@ module dbl_sync_asserts #(
     //------------------------------------------------------------------------
     property prop_dbl_sync_di_not_gray_enc;
         @(posedge clk_i) disable iff(!rstn_i || (WIDTH < 1))
-        (!$stable(data_i)) |-> $onehot(data_i ^ $past(data_i)) && (WIDTH > 1));
-    endproperty: prop_dbl_sync_di_not_gray_enc;
+        (!$stable(data_i)) |-> $onehot(data_i ^ $past(data_i));
+    endproperty: prop_dbl_sync_di_not_gray_enc
 
     //------------------------------------------------------------------------
     // stability: checks that data_i is stable for two clocks (or 3 edges ??)
