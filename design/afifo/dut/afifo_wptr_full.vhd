@@ -84,45 +84,41 @@ begin  -- rtl
   -- purpose: incr wptr_bin on every clk if winc_i is present and not fifo_full
   -- type   : sequential
   -- inputs : wclk_i, wrstn_i, winc_i
-  -- outputs: wptr_bin_s
-  p_bin_gry_incr : process (wclk_i, wrstn_i)
+  -- outputs: wptr_bin_s, wptr_gray_s, fifo_full_s
+  p_bin_gry_incr_full : process (wclk_i, wrstn_i)
+    variable wptr_bin_next_s : std_logic_vector(PWDTH downto 0) := (others => '0');
+    variable wptr_gry_next_s : std_logic_vector(PWDTH downto 0) := (others => '0');
   begin  -- process p_bin_incr
     if wrstn_i = '0' then               -- asynchronous reset (active low)
       wptr_bin_s  <= (others => '0');
       wptr_gray_s <= (others => '0');
+      fifo_full_s <= '0';
     elsif wclk_i'event and wclk_i = '1' then   -- rising clock edge
       if ((winc_i = '1') and (fifo_full_s = '0')) then
-        wptr_bin_s  <= std_logic_vector(unsigned(wptr_bin_s) + 1);  -- binary converted and stored
+        wptr_bin_next_s := std_logic_vector(unsigned(wptr_bin_s) + 1);
+        wptr_bin_s      <= wptr_bin_next_s;  -- binary converted and stored
       end if;
-      wptr_gray_s <= conv2gray(wptr_bin_s);  -- gray converted and stored
-    end if;
-  end process p_bin_gry_incr;
-
-  -- purpose: to generate the fifo_full logic based on comparison of ptrs
-  -- type   : sequential
-  -- inputs : wclk_i, wrstn_i, wptr_bin_s, rptr_gray_sync_i
-  -- outputs: fifo_full_s
-  p_fifo_full : process (wclk_i, wrstn_i)
-  begin  -- process p_fifo_full
-    if wrstn_i = '0' then               -- asynchronous reset (active low)
-      fifo_full_s <= '0';
-    elsif wclk_i'event and wclk_i = '1' then  -- rising clock edge
+      wptr_gry_next_s   := conv2gray(wptr_bin_next_s);
+      wptr_gray_s       <= wptr_gry_next_s;  -- gray converted and stored
+      -- Full gen logic - considering wrp around as well
       if (wptr_rptr_gray_full_chk(wptr_gray_s, rptr_gray_sync_i)) then
         fifo_full_s <= '1';             --fifo_full checked
       else
         fifo_full_s <= '0';
       end if;
     end if;
-  end process p_fifo_full;
+  end process p_bin_gry_incr_full;
 
-  fifo_full_o <= fifo_full_s;           -- registered fifo_full status sent
-                                        -- out
+  ---------------------------------------------------------------
+  -- Outputs
+  ---------------------------------------------------------------
+  fifo_full_o <= fifo_full_s;              -- registered fifo_full status sent out
 
   fifo_ovflw_o <= fifo_full_s and winc_i;  -- overflows when fifo is full and
                                            -- still read comes in
 
-  waddr_o <= wptr_bin_s(PWDTH-1 downto 0);  -- access the memory location
-                                            -- from the binary ptr
+  waddr_o <= wptr_bin_s(PWDTH-1 downto 0); -- access the memory location
+                                           -- from the binary ptr
 
   wptr_gray_o <= wptr_gray_s;
 

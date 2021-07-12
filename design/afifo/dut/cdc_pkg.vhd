@@ -96,5 +96,5 @@ package cdc_pkg is
       fifo_ovflw_o     : out std_logic);
   end component;
   
-end cdc_pkg;
+end package cdc_pkg;
 

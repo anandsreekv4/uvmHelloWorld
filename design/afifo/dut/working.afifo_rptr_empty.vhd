@@ -51,57 +51,64 @@ end afifo_rptr_empty;
 -------------------------------------------------------------------------------
 
 architecture rtl of afifo_rptr_empty is
-  signal rptr_bin_s        : std_logic_vector(PWDTH downto 0);  -- binary format of wptr(reg)
-  signal rptr_gray_s       : std_logic_vector(PWDTH downto 0);  -- gray format of wptr(reg)
-  signal fifo_empty_s      : std_logic;  -- since fifo_empty out cannot be read directly
+  signal rptr_bin_s, rptr_bin_next_s        : unsigned(PWDTH downto 0);  -- binary format of wptr(reg)
+  signal rptr_gray_s,rptr_gray_next_s       : unsigned(PWDTH downto 0);  -- gray format of wptr(reg)
+  signal fifo_empty_s, fifo_empty_next_s    : std_logic;  -- since fifo_empty out cannot be read directly
+  signal wptr_gray_sync_s                   : unsigned(PWDTH downto 0);
 
   function conv2gray (
-    num : std_logic_vector(PWDTH downto 0)
-    )
-    return std_logic_vector is
-    variable vnum : unsigned(PWDTH downto 0) := (others => '0');  -- type conversion
+    num : unsigned(PWDTH downto 0))  -- input number in bin
+    return unsigned is
   begin
-    vnum := unsigned(num);
-    -- Shifted ver of binary ORed with the binary produces GRAY
-    return std_logic_vector((vnum/2) xor vnum);
+    return (num/2 xor num);
+    -- because shifted ver of binary ORed with the binary produces GRAY
   end function conv2gray;
 
 begin  -- rtl
 
-  -- purpose: incr rptr_bin on every rclk if rinc_i is '1' and not fifo_empty
-  -- type   : sequential
-  -- inputs : rclk_i, rrstn_i, rinc_i
-  -- outputs: rptr_bin_s, rptr_gray_s, fifo_empty_s
-  p_bin_gry_incr_empty : process (rclk_i, rrstn_i)
-    variable rptr_bin_next_s : std_logic_vector(PWDTH downto 0) := (others => '0');
-    variable rptr_gry_next_s : std_logic_vector(PWDTH downto 0) := (others => '0');
+  p_bin_gry_incr : process (rclk_i, rrstn_i)
   begin  -- process p_bin_gry_incr
     if rrstn_i = '0' then               -- asynchronous reset (active low)
       rptr_bin_s  <= (others => '0');
       rptr_gray_s <= (others => '0');
-      fifo_empty_s<= '1';
     elsif rclk_i'event and rclk_i = '1' then   -- rising clock edge
-      if ((rinc_i = '1') and (fifo_empty_s = '0')) then
-        rptr_bin_next_s := std_logic_vector(unsigned(rptr_bin_s) + 1);
-        rptr_bin_s      <= rptr_bin_next_s;  -- binary converted and stored
-      end if;
-      rptr_gry_next_s   := conv2gray(rptr_bin_next_s);
-      rptr_gray_s       <= rptr_gry_next_s;  -- gray   converted and stored
-      -- Empty gen logic - when the next rptr is same as wptr, fifo is already empty
-      if (rptr_gry_next_s = wptr_gray_sync_i) then
-        fifo_empty_s    <= '1';
-      else
-        fifo_empty_s    <= '0';
-      end if;
+      rptr_bin_s  <= rptr_bin_next_s;  -- binary converted and stored
+      rptr_gray_s <= rptr_gray_next_s; -- converted and stored
     end if;
-  end process p_bin_gry_incr_empty;
+  end process p_bin_gry_incr;
 
-  -------------------------------------------------
-  -- Outputs
-  -------------------------------------------------
+  p_rptr_bin_next: process (rptr_bin_s, rinc_i, fifo_empty_s)
+  begin
+    if (rinc_i = '1' and fifo_empty_s = '0') then
+      rptr_bin_next_s <= to_unsigned(to_integer(rptr_bin_s) + 1, PWDTH+1);
+    else
+      rptr_bin_next_s <= rptr_bin_s;
+    end if;
+  end process p_rptr_bin_next;
+
+  rptr_gray_next_s<= conv2gray(rptr_bin_next_s);
+
+  p_fifo_empty : process (rclk_i, rrstn_i)
+  begin  -- process p_fifo_empty
+    if rrstn_i = '0' then               -- asynchronous reset (active low)
+      fifo_empty_s <= '1';              -- empty should be HIONRST
+    elsif rclk_i'event and rclk_i = '1' then  -- rising clock edge
+      fifo_empty_s <= fifo_empty_next_s;
+    end if;
+  end process p_fifo_empty;
+
+  -----------------------------------------------------------------------
+  -- Empty generation - when the 'next' rd ptr and synced wr ptr are same
+  -----------------------------------------------------------------------
+  fifo_empty_next_s  <= '1' when rptr_gray_next_s = unsigned(wptr_gray_sync_i)
+                            else '0';
+
+
   fifo_empty_o   <= fifo_empty_s;
-  fifo_undrflw_o <= fifo_empty_s and rinc_i;       -- overflows when accessed while empty
-  raddr_o        <= rptr_bin_s(PWDTH-1 downto 0);  -- only MSB-1 bits addressable in memory
-  rptr_gray_o    <= rptr_gray_s;
+  fifo_undrflw_o <= fifo_empty_s and rinc_i;  -- overflows when accessed while empty
+
+  -- Memory read-address pointer. Only MSB-1 bits addressable in memory
+  raddr_o        <= std_logic_vector(rptr_bin_s(PWDTH-1 downto 0));  
+  rptr_gray_o    <= std_logic_vector(rptr_gray_s);
 
 end rtl;
