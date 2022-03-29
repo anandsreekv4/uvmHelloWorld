@@ -1,0 +1,13 @@
+//------------------------------------------------------------
+// MELZG642 VLSI Architecure Assignment #1
+// Name: Anand S
+// BITSID: 2021HT80003
+//------------------------------------------------------------
+The Multiplier was simulated using cadence incisive "irun" command (version 15.20-s042)
+Design needs IEEE 1800-2009 std to be enabled. It was only tested on a UNIX environment.
+
+Steps to run simulation: -
+make all;
+
+To change the multiplier inputs: -
+- Edit "A" and "B" values in top.sv file.
