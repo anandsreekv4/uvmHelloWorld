@@ -265,6 +265,30 @@ task top_wX_rXp1_vseq::body();
     repeat (m_seq_cnt + 1)  this.read_atomic();
 endtask: body
 //==================================================================
+
+
+//==================================================================
+// vsequence: write X, read Y - happens parallel
+//==================================================================
+class top_wX_rY_parll_vseq extends top_wX_rXp1_vseq;
+    `uvm_object_utils(top_wX_rY_parll_vseq)
+
+    constraint c_m_seq_cnt_0 { m_seq_cnt inside {[5:10]};}
+    extern function new(string name="");
+    extern virtual task body();
+endclass: top_wX_rY_parll_vseq
+
+function top_wX_rY_parll_vseq::new (string name = "");
+    super.new(name);
+endfunction: new
+
+task top_wX_rY_parll_vseq::body();
+    this.do_reset(3); // Reset for 3 cycles
+    fork
+        repeat (m_seq_cnt)      this.write_atomic();
+        repeat (m_seq_cnt + 1)  this.read_atomic();
+    join
+endtask: body
 // End of inlined include file
 
 `endif // TOP_SEQ_LIB_SV

@@ -62,7 +62,7 @@ function void top_test::build_phase(uvm_phase phase);
 endfunction : build_phase
 
 
-// Start of inlined include file ../../design/afifo/tb/include/top_wX_rXp1_test.sv
+// Start of inlined include file ../../design/afifo/tb/include/top_test_lib.sv
 //==================================================================
 // top_test: top_wX_rXp1_test
 //==================================================================
@@ -82,6 +82,30 @@ function void top_wX_rXp1_test::build_phase (uvm_phase phase);
     super.build_phase(phase); // m_env will be created by top_test
     // factory over-ride the default vseq with this test's vseq
     top_default_seq::type_id::set_type_override(top_wX_rXp1_vseq::get_type());
+endfunction
+//==================================================================
+
+//==================================================================
+// top_test: top_wX_rY_parll_test
+//==================================================================
+
+class top_wX_rY_parll_test extends top_test;
+    `uvm_component_utils(top_wX_rY_parll_test)
+
+    extern function new (string name, uvm_component parent);
+    extern function void build_phase (uvm_phase phase);
+
+endclass: top_wX_rY_parll_test
+
+
+function top_wX_rY_parll_test::new (string name, uvm_component parent);
+    super.new(name, parent);
+endfunction: new
+
+function void top_wX_rY_parll_test::build_phase (uvm_phase phase);
+    super.build_phase(phase); // m_env will be created by top_test
+    // factory over-ride the default vseq with this test's vseq
+    top_default_seq::type_id::set_type_override(top_wX_rY_parll_vseq::get_type());
 endfunction
 //==================================================================
 // End of inlined include file
