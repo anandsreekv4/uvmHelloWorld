@@ -17,3 +17,6 @@ parameter DATA_WDTH = 32
 `ifdef INST
     `undef INST
 `endif
+
+// General defines
+`define ALU_4bit_CLA // Use this define if cla is ripple adder of 4bit CLAs
