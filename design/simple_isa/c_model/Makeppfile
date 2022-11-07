@@ -1,0 +1,2 @@
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -c $(input) -o $(output)
