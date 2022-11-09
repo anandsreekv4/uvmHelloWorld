@@ -13,7 +13,7 @@ module simple_alu (
 ,   output  logic [7:0] O
 );
 
-    always_ff@(posedge clk) begin
+    always@(posedge clk) begin
         if (add0_sub1) begin
             O <= A - B;
         end else begin

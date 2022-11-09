@@ -16,7 +16,6 @@ module simple_instr_mem (
     logic [15:0] INSTR_MEM [256];
 
     always_comb begin
-        INSTR_MEM    = '{default: 0};
         INSTR_MEM[0] = 'h300a; /* 0: MOV R0, 0xa; Setup                                               */
         INSTR_MEM[1] = 'h3100; /* 1: MOV R1, 0x0; Setup                                               */
         INSTR_MEM[2] = 'h3201; /* 2: MOV R2, 0x1; Setup                                               */
