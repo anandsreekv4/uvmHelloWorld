@@ -123,8 +123,8 @@ module simple_decode_ex (
                         regf_raddrM = INSTR[`OP2];
                         // Select add
                         add0_sub1   = 0;
-                        A           = INSTR[`OP1];
-                        B           = INSTR[`OP2];
+                        A           = regf_rdoutN;
+                        B           = regf_rdoutM;
                     end
                     `WB: begin
                         // Read Rn and Rm
@@ -133,8 +133,8 @@ module simple_decode_ex (
                         regf_raddrM = INSTR[`OP2];
                         // Select add
                         add0_sub1   = 0;
-                        A           = INSTR[`OP1];
-                        B           = INSTR[`OP2];
+                        A           = regf_rdoutN;
+                        B           = regf_rdoutM;
                         // Update Rn (OP1) in regfile
                         regf_wren   = 1;
                         regf_waddr  = INSTR[`OP1];
@@ -143,14 +143,73 @@ module simple_decode_ex (
                 endcase
             end
             5: begin // SUB Rn, Rm    ; |0x5|  ||Rn |Rm |; Rn = Rn - Rm
+                case (phase)
+                    `ID: begin
+                        // Read Rn and Rm
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1];
+                        regf_raddrM = INSTR[`OP2];
+                    end
+                    `EX: begin
+                        // Read Rn and Rm
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1];
+                        regf_raddrM = INSTR[`OP2];
+                        // Select add
+                        add0_sub1   = 1;
+                        A           = regf_rdoutN;
+                        B           = regf_rdoutM;
+                    end
+                    `WB: begin
+                        // Read Rn and Rm
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1];
+                        regf_raddrM = INSTR[`OP2];
+                        // Select add
+                        add0_sub1   = 1;
+                        A           = regf_rdoutN;
+                        B           = regf_rdoutM;
+                        // Update Rn (OP1) in regfile
+                        regf_wren   = 1;
+                        regf_waddr  = INSTR[`OP1];
+                        regf_wdin   = O;
+                    end
+                endcase
             end
             8: begin // JZ  Rn, reltiv; |0x8|R4||rel|tiv|; PC = PC + relative
             end
             9: begin // JZ  Rn, reltiv; |0x8|R4||rel|tiv|; PC = PC + relative
+                case (phase)
+                    `ID: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                    end
+                    `EX: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        if (regf_rdoutN != 0) begin
+                            pc_incr = INSTR[`OP2_DIRECT];
+                        end
+                    end
+                    `WB: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        if (regf_rdoutN != 0) begin
+                            pc_incr = INSTR[`OP2_DIRECT];
+                        end
+                    end
+                endcase
             end
             default: begin
-                $error("Invalid OPCODE used!!\n");
-                $finish;
+                case (phase)
+                    `ID, `EX, `WB: begin
+                        $error("Invalid OPCODE used!!\n");
+                        $finish;
+                    end
+                endcase
             end
         endcase
     end: decode_ex_logic_comb

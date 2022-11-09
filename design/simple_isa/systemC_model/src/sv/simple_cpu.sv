@@ -39,7 +39,7 @@ module simple_cpu (
     simple_pc u_pc (.*);
 
     // Instr mem
-    simple_instr_mem u_instr_mem (.*);
+    simple_instr_mem u_instr_mem (.instr_addr(pc), .*);
 
     // Dmem
     simple_dmem u_dmem (.*);

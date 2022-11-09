@@ -22,5 +22,11 @@ module simple_pc (
                 pc <= signed'(pc + pc_incr);
         end
     end: pc_incr_logic_seq
+    always_comb begin: pc_wdog
+        if (pc >= 8 && resetn === 1) begin
+            $info("PC value = %0d. Exiting.", pc);
+            $finish;
+        end
+    end: pc_wdog
 
 endmodule: simple_pc

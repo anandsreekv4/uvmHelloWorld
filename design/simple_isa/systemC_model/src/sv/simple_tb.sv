@@ -1,4 +1,4 @@
-//`include "flist.v"
+`include "flist.v"
 module simple_tb;
 
     // Wires
@@ -18,7 +18,7 @@ module simple_tb;
     end: seq
 
     initial begin: finish
-        #200;
+        #2000;
         $finish;
     end: finish
 endmodule: simple_tb
