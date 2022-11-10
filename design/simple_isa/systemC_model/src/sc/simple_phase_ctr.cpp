@@ -6,7 +6,6 @@
 // Has 4 phases - IF, ID, EX, WB
 // The FSM uses this ctr to sequence the signals
 
-
 #include "systemc.h"
 
 SC_MODULE(simple_phase_ctr) {

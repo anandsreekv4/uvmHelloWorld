@@ -40,9 +40,9 @@ inline void simple_tb::reset_generator() {
         first = false;
         resetn.write(0);
         reset_deactivation_event.notify(20, SC_NS);
-    }
-    else
+    } else {
         resetn.write(1);
+    }
 }
 
 SC_MODULE_EXPORT(simple_tb);
