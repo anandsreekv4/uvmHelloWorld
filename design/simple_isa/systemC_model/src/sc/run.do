@@ -28,6 +28,10 @@ vlog -sv ../sv/flist.v -define SC
 # compile sc files
 sccom -g simple_phase_ctr.cpp
 sccom -g simple_alu.cpp
+sccom -g simple_pc.cpp
+sccom -g simple_instr_mem.cpp
+sccom -g simple_dmem.cpp
+sccom -g simple_regfile.cpp
 # create simple_cpu.h
 scgenmod -bool simple_cpu > simple_cpu.h
 sccom -g simple_tb.cpp
