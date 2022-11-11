@@ -41,16 +41,14 @@ module simple_cpu (
     ,   .resetn (resetn)
     ,   .phase  (phase)
     ,   .pc_incr(pc_incr)
-    ,   .pc     (pc)
-    );
+    ,   .pc     (pc));
 
     // Instr mem
     simple_instr_mem u_instr_mem (
         .clk        (clk)
     ,   .resetn     (resetn)
     ,   .instr_addr (pc)
-    ,   .INSTR      (INSTR)
-    );
+    ,   .INSTR      (INSTR));
 
     // Dmem
     simple_dmem u_dmem (
@@ -59,8 +57,7 @@ module simple_cpu (
     ,   .dmem_wren  (dmem_wren)
     ,   .dmem_addr  (dmem_addr)
     ,   .dmem_din   (dmem_din)
-    ,   .dmem_dout  (dmem_dout)
-    );
+    ,   .dmem_dout  (dmem_dout));
 
     // Regfile
     simple_regfile u_regfile (
@@ -72,8 +69,7 @@ module simple_cpu (
     ,   .regf_raddrM(regf_raddrM)
     ,   .regf_rdoutM(regf_rdoutM)
     ,   .regf_waddr (regf_waddr)
-    ,   .regf_wdin  (regf_wdin)
-    );
+    ,   .regf_wdin  (regf_wdin));
 
     // decode-ex
     simple_decode_ex u_decode_ex (.*);
@@ -82,8 +78,7 @@ module simple_cpu (
     simple_phase_ctr u_phase (
         .clk    (clk)
     ,   .resetn (resetn)
-    ,   .phase  (phase)
-    );
+    ,   .phase  (phase));
     
     // Alu
     simple_alu u_alu (
@@ -92,7 +87,6 @@ module simple_cpu (
     ,   .add0_sub1(add0_sub1)
     ,   .A(A)
     ,   .B(B)
-    ,   .O(O)
-    );
+    ,   .O(O));
 
 endmodule: simple_cpu

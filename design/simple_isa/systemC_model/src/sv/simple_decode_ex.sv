@@ -95,8 +95,59 @@ module simple_decode_ex (
                 endcase
             end
             1: begin // MOV direct, Rn; |0x1|Rn||dir|ect|; M(direct) = Rn
+                case (phase)
+                    `ID: begin
+                        // Read Rn
+                        regf_wren = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                    end
+                    `EX: begin
+                        // Read Rn
+                        regf_wren = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        // write back early
+                        dmem_wren = 1;
+                        dmem_addr = INSTR[`OP2_DIRECT];
+                        dmem_din  = regf_rdoutN;
+                    end
+                    `WB: begin
+                        // Read Rn
+                        regf_wren = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        // write back early
+                        dmem_wren = 1;
+                        dmem_addr = INSTR[`OP2_DIRECT];
+                        dmem_din  = regf_rdoutN;                    
+                    end
+                endcase
             end
             2: begin // MOV @Rn,Rm    ; |0x2|  ||Rn |Rm |; M(Rn) = Rm
+                case (phase)
+                    `ID: begin
+                        // Read Rn
+                        regf_wren = 0;
+                        regf_raddrN = INSTR[`OP1];
+                        regf_raddrM = INSTR[`OP2]; 
+                    end
+                    `EX: begin
+                        // Read Rn
+                        regf_wren = 1;
+                        regf_raddrN = INSTR[`OP1];
+                        // write back early
+                        dmem_wren  = 1;
+                        dmem_addr  = regf_rdoutN;
+                        dmem_din   = regf_rdoutM;
+                    end
+                    `WB: begin
+                        // Read Rn
+                        regf_wren = 1;
+                        regf_raddrN = INSTR[`OP1];
+                        // write back early
+                        dmem_wren  = 1;
+                        dmem_addr  = regf_rdoutN;
+                        dmem_din   = regf_rdoutM;                
+                    end
+                endcase         
             end
             3: begin // MOV Rn, #immed; |0x3|Rn||Imm|edt|; Rn = #immed
                 case (phase)
@@ -177,6 +228,29 @@ module simple_decode_ex (
                 endcase
             end
             8: begin // JZ  Rn, reltiv; |0x8|R4||rel|tiv|; PC = PC + relative
+                case (phase)
+                    `ID: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                    end
+                    `EX: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        if (regf_rdoutN != 0) begin
+                            pc_incr = INSTR[`OP2_DIRECT];
+                        end
+                    end
+                    `WB: begin
+                        // Read Rn and relative value (DIRCT format)
+                        regf_wren   = 0;
+                        regf_raddrN = INSTR[`OP1_DIRECT];
+                        if (regf_rdoutN == 0) begin
+                            pc_incr = INSTR[`OP2_DIRECT];
+                        end
+                    end
+                endcase
             end
             9: begin // JZ  Rn, reltiv; |0x8|R4||rel|tiv|; PC = PC + relative
                 case (phase)
